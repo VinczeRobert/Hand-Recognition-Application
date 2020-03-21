@@ -2,9 +2,13 @@ from cnn_architecture.cnn_architecture import CNNArchitecture
 from data_collecting.training_data_reader import TrainingDataReader
 import h5py
 import sys
+import timeit
 
 
 if __name__ == '__main__':
+
+    start = timeit.default_timer()
+
     training_data_reader = TrainingDataReader()
     cnn_architecture = CNNArchitecture()
 
@@ -23,3 +27,7 @@ if __name__ == '__main__':
 
     cnn_architecture.build_model()
     cnn_architecture.train_model(training_data_reader.training_data, training_data_reader.class_labels)
+
+    stop = timeit.default_timer()
+
+    print('Total Run Time: {}', stop-start)
