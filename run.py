@@ -30,4 +30,4 @@ if __name__ == '__main__':
 
     stop = timeit.default_timer()
 
-    print('Total Run Time: {}', stop-start)
+    print('Total Run Time: {}'.format(stop-start))
