@@ -1,7 +1,5 @@
 from cnn_architecture.cnn_architecture import CNNArchitecture
-from data_collecting.training_data_reader import TrainingDataReader
 import h5py
-import sys
 import timeit
 
 
@@ -9,25 +7,18 @@ if __name__ == '__main__':
 
     start = timeit.default_timer()
 
-    training_data_reader = TrainingDataReader()
     cnn_architecture = CNNArchitecture()
 
-    if sys.argv[2] == 'LONG_READ':
-        training_data_reader.read_training_data()
-        with h5py.File('hra_training_data.h5', 'w') as hf:
-            hf.create_dataset("training_data", data=training_data_reader.training_data)
-            hf.create_dataset("class_labels", data=training_data_reader.class_labels)
-
-    elif sys.argv[2] == 'H5_READ':
-        with h5py.File('hra_training_data.h5', 'r') as hf:
-            training_data_reader.training_data = hf['training_data'][:]
-            training_data_reader.class_labels = hf['class_labels'][:]
-    else:
-        print('Invalid second argument!')
+    with h5py.File('data/hra_training_data.h5', 'r') as hf:
+            training_data = hf['training_data'][:]
+            training_class_labels = hf['training_class_labels'][:]
+            testing_data = hf['testing_data'][:]
+            testing_class_labels = hf['testing_class_labels'][:]
 
     cnn_architecture.build_model()
-    cnn_architecture.train_model(training_data_reader.training_data, training_data_reader.class_labels)
+    cnn_architecture.train_model(training_data, training_class_labels)
+
+    cnn_architecture.evaluate_model(testing_data, testing_class_labels)
 
     stop = timeit.default_timer()
-
-    print('Total Run Time: {}'.format(stop-start))
+    print('Total Run Time for Loading, Training and Testing: {}'.format(stop-start))

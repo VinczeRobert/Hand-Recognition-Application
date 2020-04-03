@@ -1,6 +1,6 @@
 from keras import models, layers, losses, regularizers
 
-from hyper_parameters.hyper_parameters import NUMBER_OF_FILTERS_1, NUMBER_OF_FILTERS_2, NUMBER_OF_FILTERS_3, \
+from hyper_parameters.hyper_parameters import NUMBER_OF_FILTERS_2, NUMBER_OF_FILTERS_3, \
     NUMBER_OF_FILTERS_4, KERNEL_SIZE, STRIDES, ACTIVATION_FUNCTION, POOL_SIZE, INPUT_SHAPE, DROPOUT_RATE, \
     DENSE_UNITS, NUMBER_OF_CLASSES, SECOND_ACTIVATION_FUNCTION
 
@@ -40,10 +40,15 @@ class CNNArchitecture:
         print(self.model.summary())
 
     def train_model(self, train_images, class_labels):
-        # class_labels = keras.utils.to_categorical(class_labels)
+
         self.model.compile(optimizer='adam',
                       loss=losses.sparse_categorical_crossentropy,
                            metrics=['accuracy'])
-        history = self.model.fit(train_images, class_labels, epochs=5, batch_size=64, validation_split=0.1)
+        history = self.model.fit(train_images, class_labels, epochs=3, batch_size=64, validation_split=0.1)
+
+    def evaluate_model(self, test_images, class_labels):
+        evaluate_metrics = self.model.evaluate(test_images, class_labels)
+        print("\nEvaluation Accuracy = ", "{:.2f}%".format(evaluate_metrics[1] * 100), "\nEvaluation loss = ",
+              "{:.6f}".format(evaluate_metrics[0]))
 
 
