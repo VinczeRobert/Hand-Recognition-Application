@@ -1,0 +1,27 @@
+import matplotlib.pyplot as plt
+
+
+class AccuracyLossViewer:
+    """
+    Class used to visualize the two most important results of the training process: accuracy and loss.
+    """
+    def __init__(self, history):
+        self.history = history
+
+    def plot_accuracy(self):
+       plt.plot(self.history.history['acc'])
+       plt.plot(self.history.history['val_acc'])
+       plt.legend(['train', 'test'], loc='lower right')
+       plt.title('Train VS. Test Accuracy')
+       plt.xlabel('epoch')
+       plt.ylabel('accuracy')
+       plt.show()
+
+    def plot_loss(self):
+        plt.plot(self.history.history['loss'])
+        plt.plot(self.history.history['val_acc'])
+        plt.legend(['train', 'test'], loc='upper right')
+        plt.title('Train VS. Test Loss')
+        plt.xlabel('epoch')
+        plt.ylabel('loss')
+        plt.show()
