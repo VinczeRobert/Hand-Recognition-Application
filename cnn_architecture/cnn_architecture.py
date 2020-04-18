@@ -1,12 +1,13 @@
 from keras import models, layers, losses, regularizers, callbacks
-from constants.general_constants import NUMBER_OF_CLASSES, WEIGHTS_PATH
+from sklearn import metrics
+from base_constants.general_constants import NUMBER_OF_CLASSES, WEIGHTS_PATH
 import numpy as np
 
 
 class CNNArchitecture:
 
-    # Declaring model hyper (non-trainable) parameters training
-    INPUT_SHAPE = (64, 64, 3)
+    # Declaring model hyper (non-trainable) parameters for training
+    INPUT_SHAPE = (100, 100, 3)
     NUMBER_OF_FILTERS_1 = 32
     NUMBER_OF_FILTERS_2 = 64
     NUMBER_OF_FILTERS_3 = 128
@@ -26,7 +27,7 @@ class CNNArchitecture:
     KERNEL_REGULARIZER = regularizers.l2(0.001)
 
     # Hyper parameters for training
-    EPOCHS = 3
+    EPOCHS = 10
     BATCH_SIZE = 64
     VALIDATION_SPLIT = 0.1
 
@@ -116,3 +117,10 @@ class CNNArchitecture:
             max_predictions.append(np.argmax(predictions[idx]))
 
         return max_predictions
+
+    @staticmethod
+    def compute_confusion_matrix(true_labels, predicted_labels):
+        confusion_matrix = metrics.confusion_matrix(true_labels, predicted_labels)
+        print('Confusion Matrix is:')
+        print(confusion_matrix)
+        return confusion_matrix
