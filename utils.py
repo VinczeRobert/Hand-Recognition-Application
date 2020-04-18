@@ -1,8 +1,7 @@
 import sys
 import os
-
+from base_constants.general_constants import DATA_EXTENSION
 from exceptions import InvalidFileException, IncorrectExtensionException, InvalidModeException
-from constants.constants import DATA_EXTENSION
 
 
 def check_first_command_line_argument():

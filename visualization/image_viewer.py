@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import cv2 as cv
 
 
 class ImageViewer:
@@ -21,7 +22,8 @@ class ImageViewer:
         plt.axis('off')
         plt.imshow(image)
         title = 'prediction: [{}] \n actual: [{}]'.format(predicted_class, actual_class)
-        plt.title(title)
+        plot_title = plt.title(title)
+        plt.setp(plot_title, color='r')
 
     @staticmethod
     def show_plot():
