@@ -48,7 +48,7 @@ if __name__ == '__main__':
     background_subtractor = BackgroundSubtractor()
     predicted_label = None
 
-    while frame_obtainer.get_camera().isOpened():
+    while True:
         original_image = frame_obtainer.read_frame(background_subtractor.is_background_captured(), predicted_label)
 
         if background_subtractor.is_background_captured():
@@ -68,8 +68,8 @@ if __name__ == '__main__':
 
         # Press Esc to Exit Program
         if k == 27:
-            frame_obtainer.get_camera().release()
             cv.destroyAllWindows()
+            exit(0)
             break
         # Press B to capture Background
         elif k == ord('b'):
