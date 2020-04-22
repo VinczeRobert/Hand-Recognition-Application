@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-import cv2 as cv
+from base_constants.general_constants import CLASSES
 
 
 class ImageViewer:
@@ -21,7 +21,7 @@ class ImageViewer:
         self.pred_figure.add_subplot(row, col, index)
         plt.axis('off')
         plt.imshow(image)
-        title = 'prediction: [{}] \n actual: [{}]'.format(predicted_class, actual_class)
+        title = 'prediction: [{}] \n actual: [{}]'.format(CLASSES[predicted_class], CLASSES[actual_class])
         plot_title = plt.title(title)
         plt.setp(plot_title, color='r')
 

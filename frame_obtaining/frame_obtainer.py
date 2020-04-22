@@ -2,7 +2,7 @@ import requests
 import cv2 as cv
 import numpy as np
 from preprocessing.constants import THRESHOLD
-from preprocessing.image_preprocessing import smoothing
+from preprocessing.image_preprocessing import smoothing, scaling
 
 trackbar_name = 'Hand Recognition Application'
 URL = "http://192.168.1.103:8080/shot.jpg"
@@ -24,7 +24,7 @@ class FrameObtainer:
         image_response = requests.get(URL)
         image_array = np.array(bytearray(image_response.content), dtype=np.uint8)
         frame = cv.imdecode(image_array, -1)
-        frame = cv.resize(frame, (1536, 864))
+        frame = scaling(frame, scaling_factor=0.8)
         filtered_frame = smoothing(frame)
         cv.rectangle(filtered_frame, (960, 0), (1920, 540), (0, 255, 0), 2)
         if is_background_captured is False:
