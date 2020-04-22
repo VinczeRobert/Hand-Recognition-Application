@@ -134,13 +134,15 @@ def rotating(original_image, rotation_angle, show=False):
     return rotated_image
 
 
-def finding_largest_contour(binary_image):
+def finding_largest_contour(original_image):
     """
     Takes a binary image and returns the contour of the biggest object
-    :param binary_image: input image
+    :param original_image: input image
     :return: largest contour
     """
-    contours, _ = cv.findContours(binary_image, CONTOUR_RETRIEVAL_MODE, APPROXIMATION_METHOD)
+    if len(original_image.shape) > 2:
+        original_image = convert_to_binary(original_image)
+    contours, _ = cv.findContours(original_image, CONTOUR_RETRIEVAL_MODE, APPROXIMATION_METHOD)
     largest_contour = sorted(contours, key=cv.contourArea)[-1]
     return largest_contour
 
