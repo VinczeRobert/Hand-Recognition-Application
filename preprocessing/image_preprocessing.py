@@ -1,7 +1,5 @@
 import cv2 as cv
-import os
 import numpy as np
-from base_constants.general_constants import CLASSES
 from preprocessing.constants import BLUR_VALUE, THRESHOLD, CONTOUR_RETRIEVAL_MODE, APPROXIMATION_METHOD
 
 
@@ -62,24 +60,32 @@ def scaling(original_image, scaling_factor, show=False):
     return scaled_image
 
 
-# TODO: Currently this function will only work if we wish to shrink an image,
-#  we should extend its functionality to expanding as well
-def padding(resized_image, new_size, show=False):
+def padding(resized_image, old_size, show=False):
     """
     This function is used because we don't want to resize the whole image, we want just the hand part.
     Thus, this function takes out the image of the resized hand and puts it back in the original one.
     :param resized_image: resized image from which we have to extract the hand
-    :param new_size: size of the resized image
+    :param old_size: size of the original image
     :param show: optionally show the image
     :return: padded image
     """
-    x_padding = int((new_size[1] - resized_image.shape[1]) / 2)
-    y_padding = int((new_size[0] - resized_image.shape[0]) / 2)
+    x_padding = int((old_size[1] - resized_image.shape[1]) / 2)
+    y_padding = int((old_size[0] - resized_image.shape[0]) / 2)
 
-    padded_image = np.zeros(shape=new_size, dtype=np.uint8)
-    for i in range(y_padding, new_size[0] - y_padding - 1):
-        for j in range(x_padding, new_size[1] - x_padding - 1):
-            padded_image[i][j] = resized_image[i - y_padding][j - x_padding]
+    padded_image = np.zeros(shape=old_size, dtype=np.uint8)
+
+    if x_padding > 0:
+        # When the resized image is smaller than the original one
+        for i in range(y_padding, old_size[0] - y_padding - 1):
+            for j in range(x_padding, old_size[1] - x_padding - 1):
+                padded_image[i][j] = resized_image[i - y_padding][j - x_padding]
+    else:
+        # When the resized image is bigger than the original one
+        x_padding = abs(x_padding)
+        y_padding = abs(y_padding)
+        for i in range(old_size[0] - 1):
+            for j in range(old_size[1] - 1):
+                padded_image[i][j] = resized_image[i+y_padding][j+x_padding]
     if show:
         cv.imshow('Resized Image with Padding', padded_image)
     return padded_image
