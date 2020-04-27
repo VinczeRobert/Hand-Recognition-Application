@@ -1,13 +1,12 @@
 from keras import models, layers, losses, regularizers, callbacks
 from sklearn import metrics
-from base_constants.general_constants import NUMBER_OF_CLASSES, WEIGHTS_PATH
+from base_constants.general_constants import NUMBER_OF_CLASSES, WEIGHTS_PATH, IMAGE_DIMENSION_X, IMAGE_DIMENSION_Y
 import numpy as np
 
 
 class CNNArchitecture:
-
     # Declaring model hyper (non-trainable) parameters for training
-    INPUT_SHAPE = (100, 100, 3)
+    INPUT_SHAPE = (IMAGE_DIMENSION_X, IMAGE_DIMENSION_Y, 3)
     NUMBER_OF_FILTERS_1 = 32
     NUMBER_OF_FILTERS_2 = 64
     NUMBER_OF_FILTERS_3 = 128
@@ -27,7 +26,7 @@ class CNNArchitecture:
     KERNEL_REGULARIZER = regularizers.l2(0.001)
 
     # Hyper parameters for training
-    EPOCHS = 10
+    EPOCHS = 5
     BATCH_SIZE = 64
     VALIDATION_SPLIT = 0.1
 
@@ -64,7 +63,8 @@ class CNNArchitecture:
         self.model.add(layers.Dropout(rate=self.DROPOUT_RATE))
 
         self.model.add(
-            layers.Dense(self.DENSE_UNITS, activation=self.ACTIVATION_FUNCTION, kernel_regularizer=self.KERNEL_REGULARIZER))
+            layers.Dense(self.DENSE_UNITS, activation=self.ACTIVATION_FUNCTION,
+                         kernel_regularizer=self.KERNEL_REGULARIZER))
         self.model.add(layers.Dense(NUMBER_OF_CLASSES, activation=self.SECOND_ACTIVATION_FUNCTION))
 
         print(self.model.summary())
@@ -79,9 +79,11 @@ class CNNArchitecture:
         :param train_images: images that the training will be done on
         :param class_labels: classes that the images belong to
         """
-        callback = self.use_callback_for_saving_model()
+        save_weights_callback = self.use_callback_for_saving_model()
+        early_stopping_callback = self.use_callback_for_early_stopping()
         self.history = self.model.fit(train_images, class_labels, epochs=self.EPOCHS, batch_size=self.BATCH_SIZE,
-                                      validation_split=self.VALIDATION_SPLIT, callbacks=[callback])
+                                      validation_split=self.VALIDATION_SPLIT, callbacks=[save_weights_callback,
+                                                                                         early_stopping_callback])
 
         print("Model has been created.")
         self.model.summary()
@@ -101,8 +103,16 @@ class CNNArchitecture:
         """
         Create a Callback that saves the model's weights.
         """
-        weights_callback = callbacks.ModelCheckpoint(filepath=WEIGHTS_PATH, save_weights_only=True, verbose=1)
-        return weights_callback
+        save_weights_callback = callbacks.ModelCheckpoint(filepath=WEIGHTS_PATH, save_weights_only=True, verbose=1)
+        return save_weights_callback
+
+    @staticmethod
+    def use_callback_for_early_stopping():
+        """
+        Create a Callback that stops the model earlier if no improvements are made, thus avoid overfitting.
+        """
+        early_stopping_callback = callbacks.EarlyStopping(monitor='val_accuracy', min_delta=0.001, patience=1)
+        return early_stopping_callback
 
     def predict_classes_for_images(self, images):
         """
@@ -121,6 +131,4 @@ class CNNArchitecture:
     @staticmethod
     def compute_confusion_matrix(true_labels, predicted_labels):
         confusion_matrix = metrics.confusion_matrix(true_labels, predicted_labels)
-        print('Confusion Matrix is:')
-        print(confusion_matrix)
         return confusion_matrix
