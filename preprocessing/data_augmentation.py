@@ -9,7 +9,8 @@ from preprocessing.image_preprocessing import scaling_with_padding, rotating_wit
 
 def data_augmentation(path_to_folder, new_folder_name):
     path_to_new_base_folder = os.path.join(os.path.dirname(path_to_folder), new_folder_name)
-    os.rmdir(path_to_new_base_folder)
+    # TODO: First check if path exists and then delete it, otherwise it will fail
+    # os.rmdir(path_to_new_base_folder)
     os.mkdir(path_to_new_base_folder)
 
     for category in CLASSES:
@@ -43,8 +44,3 @@ def data_augmentation(path_to_folder, new_folder_name):
             except ImageNotLoadedException as e:
                 print(e.get_exception_message())
     print('Data Augmentation is Complete...')
-
-
-if __name__ == '__main__':
-    path_to_folder = 'C:/Users/robi997/Downloads/Hand_Gesture_Dataset/Training/Only_Letters'
-    data_augmentation(path_to_folder, 'Hand Images - Augmented')

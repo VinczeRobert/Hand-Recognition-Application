@@ -1,5 +1,6 @@
 import cv2 as cv
 import numpy as np
+from base_constants.general_constants import CLASSES
 from preprocessing.constants import BLUR_VALUE, THRESHOLD, CONTOUR_RETRIEVAL_MODE, APPROXIMATION_METHOD
 
 
@@ -143,6 +144,10 @@ def finding_largest_contour(original_image):
     if len(original_image.shape) > 2:
         original_image = convert_to_binary(original_image)
     contours, _ = cv.findContours(original_image, CONTOUR_RETRIEVAL_MODE, APPROXIMATION_METHOD)
+
+    if len(contours) == 0:
+        return []
+
     largest_contour = sorted(contours, key=cv.contourArea)[-1]
     return largest_contour
 
@@ -162,19 +167,49 @@ def drawing_contour(binary_image, show=False):
     return contoured_image
 
 
-def rotating_with_cropping(binary_image, rotation_angle, show=False):
+def cropping(original_image, show=False):
+    """
+    Surrounds the hand with a bounding box, eliminating the unnecessary background parts
+    :param original_image: input image
+    :param show: optionally show the image
+    :return: cropped image
+    """
+    largest_area = finding_largest_contour(original_image)
+
+    if len(largest_area) > 0:
+        x, y, w, h = cv.boundingRect(largest_area)
+        cropped_image = original_image[y:y + h, x:x + w]
+        if show:
+            cv.imshow('Bounding Boxed Image', cropped_image)
+        return cropped_image
+    return original_image
+
+
+def rotating_with_cropping(original_image, rotation_angle, show=False):
     """
     Rotating a binary image and cropping out only the region of interest by using a bounding box
-    :param binary_image: input image
+    :param original_image: input image
     :param rotation_angle: angle of rotation (if bigger than 0, the image is rotated counter-clockwise,
      otherwise clockwise)
     :param show: optionally showing the rotated and cropped image
     :return: rotated and cropped image
     """
-    rotated_binary_image = rotating(binary_image, rotation_angle, show)
-    largest_area = finding_largest_contour(rotated_binary_image)
-    x, y, w, h = cv.boundingRect(largest_area)
-    cropped_image = rotated_binary_image[y:y + h, x:x + w]
-    if show:
-        cv.imshow('Bounding Boxed Image', cropped_image)
+    rotated_image = rotating(original_image, rotation_angle, show)
+    cropped_image = cropping(rotated_image, show)
     return cropped_image
+
+
+def thresholding_rgb_images(original_image, show=False):
+    grayscale = cv.cvtColor(original_image, cv.COLOR_RGB2GRAY)
+    blurred = cv.GaussianBlur(grayscale, (BLUR_VALUE, BLUR_VALUE), 0)
+    _, thresholded = cv.threshold(blurred, 100, 255, cv.THRESH_TOZERO)
+
+    for i in range(thresholded.shape[1]):
+        for j in range(thresholded.shape[0]):
+            if thresholded[j][i] == 0:
+                original_image[j][i] = [0, 0, 0]
+
+    if show:
+        cv.imshow('Thresholded RGB Image', original_image)
+        cv.imshow('Blurred RGB Image', blurred)
+    return original_image

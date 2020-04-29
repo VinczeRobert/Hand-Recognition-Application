@@ -9,13 +9,13 @@ class AccuracyLossViewer:
         self.history = history
 
     def plot_accuracy(self):
-       plt.plot(self.history.history['accuracy'])
-       plt.plot(self.history.history['val_accuracy'])
-       plt.legend(['train', 'validation'], loc='lower right')
-       plt.title('Train VS. Validation Accuracy')
-       plt.xlabel('epoch')
-       plt.ylabel('accuracy')
-       plt.show()
+        plt.plot(self.history.history['accuracy'])
+        plt.plot(self.history.history['val_accuracy'])
+        plt.legend(['train', 'validation'], loc='lower right')
+        plt.title('Train VS. Validation Accuracy')
+        plt.xlabel('epoch')
+        plt.ylabel('accuracy')
+        plt.show()
 
     def plot_loss(self):
         plt.plot(self.history.history['loss'])
