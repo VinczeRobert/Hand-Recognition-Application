@@ -17,8 +17,9 @@ def convert_folder(path_to_folder, new_folder_name, conversion_mode=FOLDER_CONVE
     :param scaling_factor: Factors which sets the new dimension of the resized images
     :return: void
     """
+
     path_to_new_base_folder = os.path.join(os.path.dirname(path_to_folder), new_folder_name)
-    os.rmdir(path_to_new_base_folder)
+    # os.rmdir(path_to_new_base_folder)
     os.mkdir(path_to_new_base_folder)
     for category in CLASSES:
         path = os.path.join(path_to_folder, category)

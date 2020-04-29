@@ -1,12 +1,12 @@
 from keras import models, layers, losses, regularizers, callbacks
 from sklearn import metrics
-from base_constants.general_constants import NUMBER_OF_CLASSES, WEIGHTS_PATH, IMAGE_DIMENSION_X, IMAGE_DIMENSION_Y
+from base_constants.general_constants import NUMBER_OF_CLASSES, IMAGE_SIZE_X, IMAGE_SIZE_Y, WEIGHTS_LEFT_PATH
 import numpy as np
 
 
 class CNNArchitecture:
     # Declaring model hyper (non-trainable) parameters for training
-    INPUT_SHAPE = (IMAGE_DIMENSION_X, IMAGE_DIMENSION_Y, 3)
+    INPUT_SHAPE = (IMAGE_SIZE_X, IMAGE_SIZE_Y, 3)
     NUMBER_OF_FILTERS_1 = 32
     NUMBER_OF_FILTERS_2 = 64
     NUMBER_OF_FILTERS_3 = 128
@@ -103,7 +103,7 @@ class CNNArchitecture:
         """
         Create a Callback that saves the model's weights.
         """
-        save_weights_callback = callbacks.ModelCheckpoint(filepath=WEIGHTS_PATH, save_weights_only=True, verbose=1)
+        save_weights_callback = callbacks.ModelCheckpoint(filepath=WEIGHTS_LEFT_PATH, save_weights_only=True, verbose=1)
         return save_weights_callback
 
     @staticmethod
