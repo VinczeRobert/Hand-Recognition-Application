@@ -33,6 +33,7 @@ class CNNArchitecture:
     def __init__(self):
         self.model = models.Sequential()
         self.history = None
+        self.predicted_letter = None
 
     def build_model(self):
         """
@@ -126,6 +127,7 @@ class CNNArchitecture:
         for idx in range(len(predictions)):
             max_predictions.append(np.argmax(predictions[idx]))
 
+        self.predicted_letter = max_predictions[0]
         return max_predictions
 
     @staticmethod

@@ -14,14 +14,14 @@ class FrameCaptor:
         :param url: url to Android IPWebcam server; if it is a valid one, the application will use the Android phone's camera
         :param hand: 0 for right hand, 1 for left hand
         """
-        self._url = url + '/shot.jpg'
+        self._url = url
         self._capturing_mode = None
         self.hand_index = hand_index
 
     def set_capture_mode(self):
         # if the url is not empty and is valid then the Android camera will be used
         if self._url != '':
-            response = requests.get(self._url)
+            response = requests.get(self._url  + '/shot.jpg')
             # TODO: We need a way to validate the URL before checking if we have a response
             if response.ok:
                 self._capturing_mode = 1
@@ -68,5 +68,7 @@ class FrameCaptor:
         else:
             cv.putText(filtered_frame, "Predicted letter: " + str(predicted_letter), (750, 650), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv.LINE_AA)
 
-        cv.imshow('Hand Recognition Application (HRA)', filtered_frame)
+        # cv.imshow('Hand Recognition Application (HRA)', filtered_frame)
+
+        filtered_frame = cv.imencode('.png', filtered_frame)[1].tobytes()
         return filtered_frame

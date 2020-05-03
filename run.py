@@ -20,7 +20,6 @@ if __name__ == '__main__':
 
     if mode == "DEVELOPER_MODE":
         training_data_reader = TrainingDataReader()
-
         if not os.path.isfile(H5_PATH):
             training_data_reader.read_training_data()
             training_data_reader.split_data()
@@ -52,7 +51,7 @@ if __name__ == '__main__':
 
     else:
         # In client mode the CNN model is already trained and the file with the weights should exist at WEIGHTS_PATH
-        hand_index = 0
+        hand_index = 1
         if hand_index == 0:
             weights_path = WEIGHTS_RIGHT_PATH
         else:

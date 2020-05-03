@@ -17,3 +17,6 @@ WEIGHTS_LEFT_PATH = 'data/weights/weights_left.ckpt'
 WEIGHTS_RIGHT_PATH = 'data/weights/weights_right.ckpt'
 OWN_DATA_PATH = 'D:/Hand-Recognition-Application/data/prof'
 ANDROID_URL = 'http://192.168.1.101:8080'
+
+FLASK_PORT = 9090
+SERVER_URL = 'http://127.0.0.1:9090'
