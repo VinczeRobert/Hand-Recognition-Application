@@ -1,38 +1,41 @@
 from gevent.pywsgi import WSGIServer
 from flask import Flask, render_template, Response, request
-
 from background_subtraction.background_subtraction import BackgroundSubtractor
-from base_constants.general_constants import FLASK_PORT
+from base_constants.general_constants import FLASK_PORT, WEIGHTS_RIGHT_PATH
 from cnn_architecture.cnn_architecture import CNNArchitecture
 from frame_obtaining.frame_captor import FrameCaptor
-from generator.frame_generator import frame_generator
+from generator.frame_generator import simple_frame_generator, predicted_frame_generator
 
 app = Flask(__name__)
 cnn_architecture = None
 
 
-
-@app.route('/')
-def entry_point():
+@app.route('/', methods=['GET'])
+def home():
     return render_template('index.html')
 
 
-@app.route('/hra_stream')
-def hra_stream():
+@app.route('/streaming', methods=['GET'])
+def streaming():
     return render_template('recording_started.html')
 
 
-@app.route('/stream_video', methods=['GET'])
-def stream_video():
-    # is_background_captured = request.form['is_background_captured']
-    # is_background_captured = bool(is_background_captured)
-    return Response(frame_generator(frame_captor, background_subtractor.is_background_captured()
-                                    , cnn_architecture.predicted_letter),
+@app.route('/stream_simple', methods=['GET'])
+def stream_simple():
+   return Response(simple_frame_generator(frame_captor),
+                    mimetype="multipart/x-mixed-replace; boundary=frame")
+
+
+@app.route('/stream_with_predictions', methods=['GET'])
+def stream_with_predictions():
+    return Response(predicted_frame_generator(frame_captor, background_subtractor, cnn_architecture),
                     mimetype="multipart/x-mixed-replace; boundary=frame")
 
 
 if __name__ == '__main__':
     cnn_architecture = CNNArchitecture()
+    cnn_architecture.build_model()
+    cnn_architecture.model.load_weights(WEIGHTS_RIGHT_PATH)
     frame_captor = FrameCaptor()
     frame_captor.set_capture_mode()
     background_subtractor = BackgroundSubtractor()

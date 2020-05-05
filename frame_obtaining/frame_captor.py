@@ -69,6 +69,4 @@ class FrameCaptor:
             cv.putText(filtered_frame, "Predicted letter: " + str(predicted_letter), (750, 650), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv.LINE_AA)
 
         # cv.imshow('Hand Recognition Application (HRA)', filtered_frame)
-
-        filtered_frame = cv.imencode('.png', filtered_frame)[1].tobytes()
         return filtered_frame

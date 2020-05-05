@@ -1,0 +1,62 @@
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+#first_page {
+    background-image: url('img/hand2.jpg');
+    background-repeat: no-repeat;
+    background-color: #cccccc;
+    height: 100%;
+    display: block;
+    position: relative;
+    text-align: center;
+}
+
+.hra-button {
+    position: absolute;
+    top: 80%;
+    left: 40%;
+    height: 50px;
+    width: 140px;
+    display: inline-block;
+    background-color: rgb(94, 243, 96);
+    border: 2px solid;
+    font-size: 16px;
+    border-radius: 12px;
+    justify-content: center;
+}
+
+h1{
+    margin: 0;
+}
+
+footer{
+    position: fixed;
+    bottom: 0;
+}
+
+#container {
+    position: relative;
+}
+
+
+#container .btn {
+    display: block;
+    position: absolute;;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%)
+    -ms_transform: translate(-50%, -50%);
+    background-color: #555;
+    color: green;
+    font-size: 16px;
+    padding: 12px 24px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.container .btn:hover {
+    background-color: black;
+}
