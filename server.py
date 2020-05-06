@@ -1,7 +1,7 @@
 from gevent.pywsgi import WSGIServer
 from flask import Flask, render_template, Response, request
 from background_subtraction.background_subtraction import BackgroundSubtractor
-from base_constants.general_constants import FLASK_PORT, WEIGHTS_RIGHT_PATH
+from base_constants.general_constants import FLASK_PORT, WEIGHTS_RIGHT_PATH, WEIGHTS_LEFT_PATH
 from cnn_architecture.cnn_architecture import CNNArchitecture
 from frame_obtaining.frame_captor import FrameCaptor
 from generator.frame_generator import simple_frame_generator, predicted_frame_generator
@@ -35,8 +35,8 @@ def stream_with_predictions():
 if __name__ == '__main__':
     cnn_architecture = CNNArchitecture()
     cnn_architecture.build_model()
-    cnn_architecture.model.load_weights(WEIGHTS_RIGHT_PATH)
-    frame_captor = FrameCaptor()
+    cnn_architecture.model.load_weights(WEIGHTS_LEFT_PATH)
+    frame_captor = FrameCaptor(hand_index=1)
     frame_captor.set_capture_mode()
     background_subtractor = BackgroundSubtractor()
     http_server = WSGIServer(("127.0.0.1", FLASK_PORT), app)

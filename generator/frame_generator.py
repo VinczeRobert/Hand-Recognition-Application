@@ -30,3 +30,5 @@ def predicted_frame_generator(frame_captor, background_subtractor, cnn_architect
         frame = cv.imencode('.png', frame)[1].tobytes()
         yield (b'--frame\r\n'
                b'Content-Type: image/png\r\n\r\n' + frame + b'\r\n')
+
+        cv.waitKey(10)
