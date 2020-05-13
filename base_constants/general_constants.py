@@ -19,4 +19,5 @@ OWN_DATA_PATH = 'D:/Hand-Recognition-Application/data/prof'
 ANDROID_URL = 'http://192.168.1.101:8080'
 
 FLASK_PORT = 9090
+IP_ADDRESS = "127.0.0.1"
 SERVER_URL = 'http://127.0.0.1:9090'

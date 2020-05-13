@@ -1,6 +1,7 @@
 from keras import models, layers, losses, regularizers, callbacks
 from sklearn import metrics
-from base_constants.general_constants import NUMBER_OF_CLASSES, IMAGE_SIZE_X, IMAGE_SIZE_Y, WEIGHTS_LEFT_PATH
+from base_constants.general_constants import NUMBER_OF_CLASSES, IMAGE_SIZE_X, IMAGE_SIZE_Y, WEIGHTS_LEFT_PATH, \
+    WEIGHTS_RIGHT_PATH
 import numpy as np
 
 
@@ -134,3 +135,11 @@ class CNNArchitecture:
     def compute_confusion_matrix(true_labels, predicted_labels):
         confusion_matrix = metrics.confusion_matrix(true_labels, predicted_labels)
         return confusion_matrix
+
+    def load_weights(self, hand_index=0):
+        if hand_index == 0:
+            self.load_weights(WEIGHTS_RIGHT_PATH)
+        else:
+            self.load_weights(WEIGHTS_LEFT_PATH)
+
+

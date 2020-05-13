@@ -52,6 +52,10 @@ def convert_folder(path_to_folder, new_folder_name, conversion_mode=FOLDER_CONVE
     print('Folder Conversion is Complete...')
 
 
+def add_new_class_to_dataset():
+
+
+
 if __name__  == '__main__':
     conversion_mode = 1
     path_to_folder = 'C:/Users/robi997/Downloads/Hand_Gesture_Dataset/Training/Only_Letters'

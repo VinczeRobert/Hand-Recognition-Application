@@ -1,5 +1,5 @@
-from background_subtraction.background_subtraction import BackgroundSubtractor
-from cnn_architecture.cnn_architecture import CNNArchitecture
+from model.background_subtraction import BackgroundSubtractor
+from model.cnn_architecture import CNNArchitecture
 import timeit
 import os
 import cv2 as cv
@@ -7,7 +7,7 @@ import numpy as np
 from base_constants.general_constants import CLASSES, H5_PATH, IMAGE_SIZE_X, IMAGE_SIZE_Y, \
     WEIGHTS_LEFT_PATH, WEIGHTS_RIGHT_PATH
 from data_reading.data_reading import TrainingDataReader
-from frame_obtaining.frame_captor import FrameCaptor
+from model.frame_captor import FrameCaptor
 from preprocessing.image_preprocessing import cropping
 from utils import check_first_command_line_argument
 from visualization.accuracy_and_loss_viewer import AccuracyLossViewer

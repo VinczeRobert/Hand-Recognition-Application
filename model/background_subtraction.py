@@ -3,6 +3,8 @@ import numpy as np
 from base_constants.general_constants import HAND
 
 
+
+
 class BackgroundSubtractor:
 
     HISTORY = 0

@@ -7,7 +7,7 @@ import os
 import cv2 as cv
 import numpy as np
 from base_constants.general_constants import IMAGE_SIZE_X, IMAGE_SIZE_Y, NUMBER_OF_CLASSES
-from cnn_architecture.cnn_architecture import CNNArchitecture
+from model.cnn_architecture import CNNArchitecture
 from exceptions import ImageNotLoadedException
 from visualization.image_viewer import ImageViewer
 
