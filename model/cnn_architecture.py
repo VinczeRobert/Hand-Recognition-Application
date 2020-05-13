@@ -98,6 +98,9 @@ class CNNArchitecture:
         print("\nEvaluation Accuracy = ", "{:.2f}%".format(evaluate_metrics[1] * 100), "\nEvaluation loss = ",
               "{:.6f}".format(evaluate_metrics[0]))
 
+    def load_model(self, path):
+        self.model.load_weights(path)
+
     @staticmethod
     def use_callback_for_saving_model():
         """

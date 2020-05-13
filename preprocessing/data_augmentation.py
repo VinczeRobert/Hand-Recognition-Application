@@ -9,8 +9,10 @@ from preprocessing.image_preprocessing import scaling_with_padding, rotating_wit
 
 def data_augmentation(path_to_folder, new_folder_name):
     path_to_new_base_folder = os.path.join(os.path.dirname(path_to_folder), new_folder_name)
-    # TODO: First check if path exists and then delete it, otherwise it will fail
-    # os.rmdir(path_to_new_base_folder)
+
+    if os.path.exists(path_to_new_base_folder):
+        os.rmdir(path_to_new_base_folder)
+
     os.mkdir(path_to_new_base_folder)
 
     for category in CLASSES:

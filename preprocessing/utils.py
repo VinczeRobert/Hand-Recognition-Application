@@ -2,6 +2,7 @@ import os
 import cv2 as cv
 from base_constants.general_constants import CLASSES
 from exceptions import ImageNotLoadedException
+from model.frame_captor import FrameCaptor
 from preprocessing.constants import FOLDER_CONVERSIONS
 from preprocessing.image_preprocessing import scaling, convert_to_binary, drawing_contour
 
@@ -12,6 +13,7 @@ def convert_folder(path_to_folder, new_folder_name, conversion_mode=FOLDER_CONVE
     Converts a folder of RGB images to binary, grayscale or contour images. Binary is default.
     :param path_to_folder: the path has to lead to a folder, which is supposed to have sub-folders for each class and
     the images belonging to those classes should all be in their respective sub-folders
+    :param new_folder_name: name of new folder
     :param resize: Optionally resizing the images
     :param conversion_mode: 0 = Binary, 1 = Grayscale, 2 = Contour
     :param scaling_factor: Factors which sets the new dimension of the resized images
@@ -19,7 +21,10 @@ def convert_folder(path_to_folder, new_folder_name, conversion_mode=FOLDER_CONVE
     """
 
     path_to_new_base_folder = os.path.join(os.path.dirname(path_to_folder), new_folder_name)
-    # os.rmdir(path_to_new_base_folder)
+
+    if os.path.exists(path_to_new_base_folder):
+        os.rmdir(path_to_new_base_folder)
+
     os.mkdir(path_to_new_base_folder)
     for category in CLASSES:
         path = os.path.join(path_to_folder, category)
@@ -50,9 +55,3 @@ def convert_folder(path_to_folder, new_folder_name, conversion_mode=FOLDER_CONVE
             except ImageNotLoadedException as e:
                 print(e.get_exception_message())
     print('Folder Conversion is Complete...')
-
-
-if __name__  == '__main__':
-    conversion_mode = 1
-    path_to_folder = 'C:/Users/robi997/Downloads/Hand_Gesture_Dataset/Training/Only_Letters'
-    convert_folder(path_to_folder, 'Hand Images - Augmented', conversion_mode)

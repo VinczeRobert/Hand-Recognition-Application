@@ -1,6 +1,5 @@
 import cv2 as cv
 import numpy as np
-from base_constants.general_constants import CLASSES
 from preprocessing.constants import BLUR_VALUE, THRESHOLD, CONTOUR_RETRIEVAL_MODE, APPROXIMATION_METHOD
 
 
@@ -10,7 +9,7 @@ def smoothing(captured_frame):
     :param captured_frame: captured frame
     :return: smoothed and flipped image
     """
-    filtered_image = cv.bilateralFilter(captured_frame, 5, 50, 100)
+    filtered_image = cv.bilateralFilter(captured_frame, 9, 75, 75)
     filtered_image = cv.flip(filtered_image, 1)
     return filtered_image
 
