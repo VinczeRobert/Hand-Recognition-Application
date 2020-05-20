@@ -7,6 +7,7 @@ from model.cnn_architecture import CNNArchitecture
 from model.frame_captor import FrameCaptor
 from model.frame_displayer import FrameDisplayer
 from model.image_preprocessor import ImagePreprocessor
+from preprocessing.image_preprocessing import cropping
 
 
 class Controller:
@@ -17,12 +18,13 @@ class Controller:
         self.frame_displayer = FrameDisplayer(hand_index)
         self.image_preprocessor = ImagePreprocessor(hand_index, var_threshold)
         self.cnn_architecture = CNNArchitecture()
+        self.cnn_architecture.build_model()
         self.is_binary = is_binary
 
-        # if HAND[hand_index] == 'RIGHT':
-        #     self.cnn_architecture.load_model(WEIGHTS_RIGHT_PATH)
-        # else:
-        #     self.cnn_architecture.load_model(WEIGHTS_LEFT_PATH)
+        if HAND[hand_index] == 'RIGHT':
+            self.cnn_architecture.load_model(WEIGHTS_RIGHT_PATH)
+        else:
+            self.cnn_architecture.load_model(WEIGHTS_LEFT_PATH)
 
     def run_hand_prediction(self):
         predicted_letter = None
@@ -38,7 +40,8 @@ class Controller:
                 else:
                     preprocessed_image = self.image_preprocessor.prepare_binary_image_for_classification(flipped_image)
 
-                resized_image = cv.resize(preprocessed_image, (IMAGE_SIZE_X, IMAGE_SIZE_Y))
+                cropped_image = cropping(preprocessed_image)
+                resized_image = cv.resize(cropped_image, (IMAGE_SIZE_X, IMAGE_SIZE_Y))
                 cnn_input = np.array(np.zeros(shape=(1, IMAGE_SIZE_X, IMAGE_SIZE_Y, 3)))
                 normalized_input = cv.normalize(resized_image, None, alpha=0, beta=1, norm_type=cv.NORM_MINMAX,
                                                 dtype=cv.CV_32F)
@@ -47,9 +50,7 @@ class Controller:
                 predicted_class = self.cnn_architecture.predict_classes_for_images(cnn_input)
                 predicted_letter = CLASSES[predicted_class[0]]
 
-                self.frame_displayer.display_frame(preprocessed_image, predicted_letter)
-            else:
-                self.frame_displayer.display_frame(flipped_image, predicted_letter)
+            self.frame_displayer.display_frame(flipped_image, predicted_letter)
 
             k = cv.waitKey(10)
 

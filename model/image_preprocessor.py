@@ -22,7 +22,7 @@ class ImagePreprocessor:
         opened_mask = cv.dilate(eroded_mask, kernel, iterations=3)
 
         # STEP 4: Get difference between background and current image
-        difference = cv.bitwise_and(filtered_image, filtered_image, opened_mask)
+        difference = cv.bitwise_and(filtered_image, filtered_image, mask=opened_mask)
 
         # STEP 5: Extract the hand from the difference
         if HAND[self.hand_index] == 'RIGHT':
@@ -30,6 +30,7 @@ class ImagePreprocessor:
         else:
             extracted_hand = difference[0:480, 0:480]
 
+        cv.imshow('Extracted Hand', extracted_hand)
         return extracted_hand
 
     def prepare_binary_image_for_classification(self, image):
