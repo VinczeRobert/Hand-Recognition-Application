@@ -29,20 +29,6 @@ def convert_to_binary(color_image, show_image=False):
     return binary_image
 
 
-# TODO: Find out if we actually need this, it would be better if we could just feed classic binary images to the model
-def extend_binary_to_three_channels(one_channel_binary):
-    """
-    Extends a classic one-channel binary image to have three channels in order to feed it to the convolutional neural network model
-    :param one_channel_binary:
-    :return: binary image with three channels
-    """
-    three_channel_binary = np.zeros(shape=(one_channel_binary.shape[0], one_channel_binary.shape[1], 3))
-    three_channel_binary[:, :, 0] = one_channel_binary
-    three_channel_binary[:, :, 1] = one_channel_binary
-    three_channel_binary[:, :, 2] = one_channel_binary
-    return three_channel_binary
-
-
 def scaling(original_image, scaling_factor, show=False):
     """
     Scales an image along both axes with the same scaling_factor resulting in a resized images,
@@ -164,24 +150,6 @@ def drawing_contour(binary_image, show=False):
     if show:
         cv.imshow('Contoured Image', contoured_image)
     return contoured_image
-
-
-def cropping(original_image, show=False):
-    """
-    Surrounds the hand with a bounding box, eliminating the unnecessary background parts
-    :param original_image: input image
-    :param show: optionally show the image
-    :return: cropped image
-    """
-    largest_area = finding_largest_contour(original_image)
-
-    if len(largest_area) > 0:
-        x, y, w, h = cv.boundingRect(largest_area)
-        cropped_image = original_image[y:y + h, x:x + w]
-        if show:
-            cv.imshow('Bounding Boxed Image', cropped_image)
-        return cropped_image
-    return original_image
 
 
 def rotating_with_cropping(original_image, rotation_angle, show=False):

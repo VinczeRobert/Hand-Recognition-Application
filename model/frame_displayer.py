@@ -23,7 +23,12 @@ class FrameDisplayer:
             cv.putText(frame, text_first, (60, 60), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0,255), 2, cv.LINE_AA)
             cv.putText(frame, text_second, (60, 85), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2, cv.LINE_AA)
             cv.putText(frame, text_third, (60, 110), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2, cv.LINE_AA)
+            # TODO: This should not be here, move it somewhere else
+        elif isinstance(predicted_letter, int):
+            cv.putText(frame, "Currently saving image number {}".format(predicted_letter), (650, 650),
+                       cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv.LINE_AA)
         else:
-            cv.putText(frame, "Predicted letter: " + str(predicted_letter), (750, 650), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv.LINE_AA)
+            cv.putText(frame, "Predicted letter: " + str(predicted_letter), (750, 650), cv.FONT_HERSHEY_SIMPLEX,
+                       1, (0, 0, 255), 2, cv.LINE_AA)
 
         cv.imshow('Hand Recognition Application', frame)
