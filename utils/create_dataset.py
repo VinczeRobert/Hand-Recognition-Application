@@ -7,7 +7,7 @@ from model.image_preprocessor import ImagePreprocessor
 
 
 # TODO: Add functionality to append the images to the existing ones, not override them
-def create_data_for_class(path_to_folder, class_name, is_binary=False, images_number=1000,
+def create_data_for_class(path_to_folder, class_name, is_binary=False, start_count=1, end_count=1000,
                           with_cropping=False, camera_init_url='', hand_index=0, var_threshold=50):
     # Creating folders if they are not existing
     if not os.path.exists(path_to_folder):
@@ -23,7 +23,6 @@ def create_data_for_class(path_to_folder, class_name, is_binary=False, images_nu
     frame_captor.set_capture_mode()
     image_preprocessor = ImagePreprocessor(hand_index, var_threshold)
     frame_display = FrameDisplayer(hand_index)
-    image_counter = 1
     start = False
     background_captured = False
 
@@ -38,7 +37,7 @@ def create_data_for_class(path_to_folder, class_name, is_binary=False, images_nu
                                                                                          with_cropping=with_cropping)
 
             if start:
-                save_path = os.path.join(image_path, class_name + '_{}.jpg'.format(image_counter))
+                save_path = os.path.join(image_path, class_name + '_{}.jpg'.format(start_count))
 
                 while True:
                     stop_time = timeit.default_timer()
@@ -46,17 +45,17 @@ def create_data_for_class(path_to_folder, class_name, is_binary=False, images_nu
 
                     if difference > 0.25:
                         cv.imwrite(save_path, preprocessed_image)
-                        image_counter = image_counter + 1
+                        start_count = start_count + 1
                         break
 
-            if image_counter > images_number:
+            if start_count > end_count:
                 break
 
-        frame_display.display_frame(flipped_image, image_counter)
+        frame_display.display_frame(flipped_image, start_count)
 
         key = cv.waitKey(10)
 
-        if key == ord('s'):
+        if key == ord('s') and background_captured:
             start = True
         elif key == ord('b'):
             background_captured = True

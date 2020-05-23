@@ -16,39 +16,45 @@ class ImagePreprocessor:
         # STEP 2: Get the difference between current frame and background
         binary_image = self.background_subtractor.apply(filtered_image, learningRate=0)
 
-        # STEP 3: Perform opening on extracted hand
+        # STEP 3: Extract only the hand part from the difference
+        if HAND[self.hand_index] == 'RIGHT':
+            extracted_mask = binary_image[0:480, 800:1280]
+            extracted_image = image[0:480, 800:1280]
+        else:
+            extracted_mask = binary_image[0:480, 0:480]
+            extracted_image = image[0:480, 0:480]
+
+        # STEP 4: Perform opening on extracted hand to remove noise
         kernel = np.ones((3, 3), np.uint8)
-        eroded_hand = cv.erode(binary_image, kernel, iterations=2)
+        eroded_hand = cv.erode(extracted_mask, kernel, iterations=2)
         opened_hand = cv.erode(eroded_hand, kernel, iterations=2)
 
-        # STEP 4: Find the contours of the image
+        # STEP 5: Find the contours of the image
         contours = cv.findContours(opened_hand, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)[0]
 
-        # STEP 5: If the image has at least one contour, keep only the biggest one, otherwise exit
+        # STEP 6: If the image has at least one contour, keep only the biggest one, otherwise exit
         if len(contours) == 0:
-            return -1
+            three_channels_opened_hand = self.extend_binary_to_three_channels(opened_hand)
+            cv.imshow('Extracted Hand', three_channels_opened_hand)
+            return three_channels_opened_hand
         else:
             largest_contour = sorted(contours, key=cv.contourArea)[-1]
 
             final_image = np.zeros(shape=opened_hand.shape, dtype=np.uint8)
             contoured_image = cv.drawContours(final_image, [largest_contour], 0, (255, 255, 255), -2)
 
-            if with_cropping:
-                # STEP 6 (OPTIONAL): Crop the image around the hand
-                x, y, w, h = cv.boundingRect(largest_contour)
-                contoured_image = contoured_image[y:y + h, x:x + w]
-
             if is_binary is False:
-                # STEP 7 (OPTIONAL): For RGB Images, keep only pixels from contoured image
-                contoured_image = cv.bitwise_and(image, image, mask=contoured_image)
+                # STEP 7 (IF RGB): keep only pixels from contoured image
+                extracted_hand = cv.bitwise_and(extracted_image, extracted_image, mask=contoured_image)
             else:
-                contoured_image = self.extend_binary_to_three_channels(contoured_image)
+                # STEP 8 (IF BINARY): extend the one-channeled binary image to three channels
+                extracted_hand = self.extend_binary_to_three_channels(contoured_image)
 
-            # STEP 7: Extract the hand from the difference
-            if HAND[self.hand_index] == 'RIGHT':
-                extracted_hand = contoured_image[0:480, 800:1280]
-            else:
-                extracted_hand = contoured_image[0:480, 0:480]
+            if with_cropping:
+                # STEP 8 (OPTIONAL): Crop the image around the hand
+                x, y, w, h = cv.boundingRect(largest_contour)
+                cropped_image = extracted_hand[y:y + h, x:x + w]
+                return cropped_image
 
             cv.imshow('Extracted Hand', extracted_hand)
             return extracted_hand
