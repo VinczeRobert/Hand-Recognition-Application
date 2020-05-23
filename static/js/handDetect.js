@@ -66,12 +66,7 @@ function postFile(file){
     xhr.open('POST', window.location.origin + '/prediction', true);
     xhr.onload = function(){
         if(this.status === 200){
-//            let objects = JSON.parse(this.response);
-              var pred = document.getElementById('prediction');
-              pred.textContent = this.response;
-//
-//            console.log(objects);
-            //draw prediction on it
+            console.log(this.response)
             imageCanvas.toBlob(postFile, 'image/jpeg');
         }
         else{

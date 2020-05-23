@@ -138,8 +138,8 @@ class CNNArchitecture:
 
     def load_weights(self, hand_index=0):
         if hand_index == 0:
-            self.load_weights(WEIGHTS_RIGHT_PATH)
+            self.model.load_weights(WEIGHTS_RIGHT_PATH)
         else:
-            self.load_weights(WEIGHTS_LEFT_PATH)
+            self.model.load_weights(WEIGHTS_LEFT_PATH)
 
 

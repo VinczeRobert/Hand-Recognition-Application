@@ -9,6 +9,8 @@ def get_base_template():
 
 
 def get_streaming_template():
+    session_facade = session.get('session_facade')
+    session_facade.start_prediction()
     return Response(open('./templates/streaming.html').read(), mimetype="text/html")
 
 
