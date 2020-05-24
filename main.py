@@ -15,11 +15,6 @@ def after_request(response):
     return response
 
 
-# @app.route('/video')
-# def remote():
-#     return Response(open('./templates/video.html').read(), mimetype="text/html")
-
-
 if __name__ == '__main__':
     app.secret_key = 'any_random_string'
     app.config['SESSION_TYPE'] = 'filesystem'

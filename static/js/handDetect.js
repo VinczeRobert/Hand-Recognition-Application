@@ -9,9 +9,11 @@ v = document.getElementById(sourceVideo);
 let isPlaying = false,
     gotMetadata = false;
 
+// image sent to Python
 let imageCanvas = document.createElement('canvas');
 let imageCtx = imageCanvas.getContext("2d");
 
+// image displayed in HTML
 let drawCanvas = document.createElement('canvas');
 document.body.appendChild(drawCanvas);
 let drawCtx = drawCanvas.getContext("2d");
@@ -66,7 +68,11 @@ function postFile(file){
     xhr.open('POST', window.location.origin + '/prediction', true);
     xhr.onload = function(){
         if(this.status === 200){
-            console.log(this.response)
+            let prediction = this.response;
+            console.log(prediction);
+            drawResult(prediction);
+            $('#result').text(prediction);
+            imageCtx.drawImage(v, 0, 0, v.videoWidth, v.videoHeight, 0, 0, uploadWidth, uploadWidth * (v.videoHeight / v.videoWidth));
             imageCanvas.toBlob(postFile, 'image/jpeg');
         }
         else{
@@ -75,5 +81,12 @@ function postFile(file){
     };
     xhr.send(formdata);
 }
+
+function drawResult(prediction){
+    //filter out objects that contain a class_name and then draw boxes and labels on each
+    drawCtx.fillText("Prediction is " + prediction, 650, 650);
+    drawCtx.strokeRect(0, 0, 480, 480);
+}
+
 
 

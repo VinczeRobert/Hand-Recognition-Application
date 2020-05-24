@@ -1,5 +1,5 @@
 import numpy as np
-
+import cv2 as cv
 from base_constants.general_constants import IMAGE_SIZE_X, IMAGE_SIZE_Y
 from services.cnn_service import CNNService
 from services.image_processing_service import ImageProcessingService
@@ -8,7 +8,7 @@ from services.image_processing_service import ImageProcessingService
 class SessionFacade:
     def __init__(self):
         self.cnn_service = CNNService()
-        self.image_processing_service = ImageProcessingService()
+        self.image_processing_service = ImageProcessingService(hand_index=1)
 
     def start_prediction(self):
         self.image_processing_service.start_prediction()

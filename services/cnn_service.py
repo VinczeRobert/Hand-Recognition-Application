@@ -6,7 +6,7 @@ class CNNService:
     def __init__(self):
         self.cnn_architecture = CNNArchitecture()
         self.cnn_architecture.build_model()
-        self.cnn_architecture.load_weights()
+        self.cnn_architecture.load_weights(hand_index=1)
 
     def predict_class(self, cnn_input):
         predicted_class = self.cnn_architecture.predict_classes_for_images(cnn_input)

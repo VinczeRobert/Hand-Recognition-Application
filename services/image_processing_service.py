@@ -13,7 +13,9 @@ class ImageProcessingService:
         self.image_preprocessor.set_background_subtractor()
 
     def preprocess_image(self, pil_image, is_binary, with_cropping):
-        numpy_image = np.asarray(Image.open(pil_image))
+        pil_image = Image.open(pil_image)
+        (im_width, im_height) = pil_image.size
+        numpy_image = np.array(pil_image.getdata()).reshape((im_height, im_width, 3)).astype(np.uint8)
         flipped_image = cv.flip(numpy_image, 1)
 
         preprocessed_image = self.image_preprocessor.prepare_image_for_classification(flipped_image,

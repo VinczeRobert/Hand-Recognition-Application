@@ -17,7 +17,7 @@ def get_streaming_template():
 def get_prediction():
     session_facade = session.get('session_facade')
     image_file = request.files['image']
-    return session_facade.get_prediction_for_image(image_file)
+    return session_facade.get_prediction_for_image(image_file, with_cropping=True)
 
 
 # TODO: Add a way for the user to choose the hand from an UI settings page
