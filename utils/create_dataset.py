@@ -6,7 +6,6 @@ from model.frame_displayer import FrameDisplayer
 from model.image_preprocessor import ImagePreprocessor
 
 
-# TODO: Add functionality to append the images to the existing ones, not override them
 def create_data_for_class(path_to_folder, class_name, is_binary=False, start_count=1, end_count=1000,
                           with_cropping=False, camera_init_url='', hand_index=0, var_threshold=50):
     # Creating folders if they are not existing
@@ -51,7 +50,7 @@ def create_data_for_class(path_to_folder, class_name, is_binary=False, start_cou
             if start_count > end_count:
                 break
 
-        frame_display.display_frame(flipped_image, start_count)
+        frame_display.display_frame(flipped_image, start_count, '')
 
         key = cv.waitKey(10)
 

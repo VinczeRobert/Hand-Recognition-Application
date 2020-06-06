@@ -36,9 +36,16 @@ class ImagePreprocessor:
         if len(contours) == 0:
             three_channels_opened_hand = self.extend_binary_to_three_channels(opened_hand)
             cv.imshow('Extracted Hand', three_channels_opened_hand)
-            return three_channels_opened_hand
+            return three_channels_opened_hand, -1
         else:
             largest_contour = sorted(contours, key=cv.contourArea)[-1]
+            contour_area = cv.contourArea(largest_contour)
+
+            # If largest area does not cover at least 30% of the image, it is considered that no handsign was shown
+            if contour_area < (0.15 * opened_hand.shape[0] * opened_hand.shape[1]):
+                three_channels_opened_hand = self.extend_binary_to_three_channels(opened_hand)
+                cv.imshow('Extracted Hand', three_channels_opened_hand)
+                return three_channels_opened_hand, - 1
 
             final_image = np.zeros(shape=opened_hand.shape, dtype=np.uint8)
             contoured_image = cv.drawContours(final_image, [largest_contour], 0, (255, 255, 255), -2)
@@ -57,7 +64,7 @@ class ImagePreprocessor:
                 return cropped_image
 
             cv.imshow('Extracted Hand', extracted_hand)
-            return extracted_hand
+            return extracted_hand, 0
 
     def set_background_subtractor(self):
         self.background_subtractor = cv.createBackgroundSubtractorMOG2(0, self.var_threshold, detectShadows=False)

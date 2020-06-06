@@ -24,7 +24,10 @@ class Controller:
             self.cnn_architecture.load_model(WEIGHTS_LEFT_PATH)
 
     def run_hand_prediction(self, is_binary=False, with_cropping=False):
-        predicted_letter = None
+        new_predicted_letter = None
+        last_predicted_letter = None
+        iterations_between_different_predictions = 0
+        predicted_text = ''
         is_background_captured = False
 
         while True:
@@ -32,33 +35,47 @@ class Controller:
             flipped_image = cv.flip(image, 1)
 
             if is_background_captured is True:
-                preprocessed_image = self.image_preprocessor.prepare_image_for_classification(flipped_image,
+                preprocessed_image, status = self.image_preprocessor.prepare_image_for_classification(flipped_image,
                                                                                               is_binary=is_binary,
                                                                                               with_cropping=with_cropping)
+                if status == -1:
+                    new_predicted_letter = -1
+                else:
+                    resized_image = cv.resize(preprocessed_image, (IMAGE_SIZE_X, IMAGE_SIZE_Y))
+                    cnn_input = np.array(np.zeros(shape=(1, IMAGE_SIZE_X, IMAGE_SIZE_Y, 3)))
+                    normalized_input = cv.normalize(resized_image, None, alpha=0, beta=1, norm_type=cv.NORM_MINMAX,
+                                                    dtype=cv.CV_32F)
+                    cnn_input[0] = normalized_input
 
-                resized_image = cv.resize(preprocessed_image, (IMAGE_SIZE_X, IMAGE_SIZE_Y))
-                cnn_input = np.array(np.zeros(shape=(1, IMAGE_SIZE_X, IMAGE_SIZE_Y, 3)))
-                normalized_input = cv.normalize(resized_image, None, alpha=0, beta=1, norm_type=cv.NORM_MINMAX,
-                                                dtype=cv.CV_32F)
-                cnn_input[0] = normalized_input
+                    predicted_class = self.cnn_architecture.predict_classes_for_images(cnn_input)
+                    new_predicted_letter = CLASSES[predicted_class[0]]
 
-                predicted_class = self.cnn_architecture.predict_classes_for_images(cnn_input)
-                predicted_letter = CLASSES[predicted_class[0]]
+                    if new_predicted_letter != last_predicted_letter:
+                        last_predicted_letter = new_predicted_letter
+                    else:
+                        iterations_between_different_predictions = iterations_between_different_predictions + 1
 
-            self.frame_displayer.display_frame(flipped_image, predicted_letter)
+                    if iterations_between_different_predictions > 40:
+                        iterations_between_different_predictions = 0
+                        predicted_text = predicted_text + last_predicted_letter
+
+            self.frame_displayer.display_frame(flipped_image, new_predicted_letter, predicted_text)
 
             k = cv.waitKey(10)
 
             # Press Esc to Exit Program
-            if k == 27:
+            if k == ord('q'):
                 cv.destroyAllWindows()
                 exit(0)
             # Press B to Capture Background
             elif k == ord('b'):
                 self.image_preprocessor.set_background_subtractor()
                 is_background_captured = True
-
+            elif k == ord('d'):
+                predicted_text = predicted_text[:-1]
+            elif k == ord('s'):
+                predicted_text = predicted_text + ' '
             # Press R to eliminate Current Background, then press B to capture it again
             elif k == ord('r'):
-                predicted_letter = None
+                new_predicted_letter = None
                 is_background_captured = False
