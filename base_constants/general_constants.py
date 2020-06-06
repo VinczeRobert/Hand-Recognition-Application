@@ -13,7 +13,7 @@ HAND = ['RIGHT', 'LEFT']
 CAPTURING_MODE = ['PC_CAMERA', 'ANDROID_CAMERA']
 
 H5_PATH = 'data/h5/hra_training_data.h5'
-WEIGHTS_LEFT_PATH = 'data/weights/weights_left.ckpt'
+WEIGHTS_LEFT_PATH = 'data/weights/weights_left_binary.ckpt'
 WEIGHTS_RIGHT_PATH = 'data/weights/weights_right.ckpt'
 OWN_DATA_PATH = 'D:/Hand-Recognition-Application/data/prof'
 ANDROID_URL = 'http://192.168.1.101:8080'

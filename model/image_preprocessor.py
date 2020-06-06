@@ -34,7 +34,7 @@ class ImagePreprocessor:
 
         # STEP 6: If the image has at least one contour, keep only the biggest one, otherwise exit
         if len(contours) == 0:
-            three_channels_opened_hand = self.extend_binary_to_three_channels(opened_hand)
+            three_channels_opened_hand = cv.cvtColor(opened_hand, cv.COLOR_GRAY2RGB)
             cv.imshow('Extracted Hand', three_channels_opened_hand)
             return three_channels_opened_hand, -1
         else:
@@ -43,7 +43,7 @@ class ImagePreprocessor:
 
             # If largest area does not cover at least 30% of the image, it is considered that no handsign was shown
             if contour_area < (0.15 * opened_hand.shape[0] * opened_hand.shape[1]):
-                three_channels_opened_hand = self.extend_binary_to_three_channels(opened_hand)
+                three_channels_opened_hand = cv.cvtColor(opened_hand, cv.COLOR_GRAY2RGB)
                 cv.imshow('Extracted Hand', three_channels_opened_hand)
                 return three_channels_opened_hand, - 1
 
@@ -55,7 +55,7 @@ class ImagePreprocessor:
                 extracted_hand = cv.bitwise_and(extracted_image, extracted_image, mask=contoured_image)
             else:
                 # STEP 8 (IF BINARY): extend the one-channeled binary image to three channels
-                extracted_hand = self.extend_binary_to_three_channels(contoured_image)
+                extracted_hand = cv.cvtColor(contoured_image,cv.COLOR_GRAY2RGB)
 
             if with_cropping:
                 # STEP 8 (OPTIONAL): Crop the image around the hand
@@ -68,18 +68,3 @@ class ImagePreprocessor:
 
     def set_background_subtractor(self):
         self.background_subtractor = cv.createBackgroundSubtractorMOG2(0, self.var_threshold, detectShadows=False)
-
-    # TODO: Find out if we actually need this, would be better if we could just feed classic binary images to the model
-    @staticmethod
-    def extend_binary_to_three_channels(one_channel_binary):
-        """
-        Extends a classic one-channel binary image to have three channels in order to feed it to the convolutional neural
-        network model
-        :param one_channel_binary:
-        :return: binary image with three channels
-        """
-        three_channel_binary = np.zeros(shape=(one_channel_binary.shape[0], one_channel_binary.shape[1], 3))
-        three_channel_binary[:, :, 0] = one_channel_binary
-        three_channel_binary[:, :, 1] = one_channel_binary
-        three_channel_binary[:, :, 2] = one_channel_binary
-        return three_channel_binary

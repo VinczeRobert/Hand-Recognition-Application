@@ -36,5 +36,18 @@ class FrameDisplayer:
             cv.putText(frame, "Predicted letter: " + str(predicted_letter), (750, 650), cv.FONT_HERSHEY_SIMPLEX,
                        1, (0, 0, 255), 2, cv.LINE_AA)
 
-        cv.putText(frame, predicted_text, (0, 500), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv.LINE_AA)
+        # Display text
+        text_size = cv.getTextSize(predicted_text, cv.FONT_HERSHEY_SIMPLEX, 1,cv.LINE_AA)[0]
+        line_height = text_size[1] + 5
+        y0 = 520
+        no_displayable_lines = int((720 - 500) / line_height)
+        split_text = predicted_text.split("\n")
+        no_all_lines = len(split_text)
+
+        if no_all_lines > no_displayable_lines:
+            split_text = split_text[(no_all_lines - no_displayable_lines):]
+
+        for i, line in enumerate(split_text):
+            y = y0 + i * line_height
+            cv.putText(frame, line, (0, y), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv.LINE_AA)
         cv.imshow('Hand Recognition Application', frame)

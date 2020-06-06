@@ -63,6 +63,7 @@ class Controller:
 
             k = cv.waitKey(10)
 
+            # TODO: Simplify this somehow, there are too many ifs + we need to add for saving and loading
             # Press Esc to Exit Program
             if k == ord('q'):
                 cv.destroyAllWindows()
@@ -75,6 +76,13 @@ class Controller:
                 predicted_text = predicted_text[:-1]
             elif k == ord('s'):
                 predicted_text = predicted_text + ' '
+            elif k == ord('n'):
+                predicted_text = predicted_text + '\n'
+            elif k in [ord('.'), ord(','), ord('?'), ord('!'), ord("'"), ord('"')]:
+                predicted_text = predicted_text + ('%c' % k)
+            elif k == ord('c'):
+                predicted_text = ''
+
             # Press R to eliminate Current Background, then press B to capture it again
             elif k == ord('r'):
                 new_predicted_letter = None
