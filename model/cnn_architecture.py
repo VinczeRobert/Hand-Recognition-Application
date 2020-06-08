@@ -5,20 +5,13 @@ import numpy as np
 
 
 class CNNArchitecture:
+
     # Declaring model hyper (non-trainable) parameters for training
-    INPUT_SHAPE = (IMAGE_SIZE_X, IMAGE_SIZE_Y, 3)
-    NUMBER_OF_FILTERS_1 = 32
-    NUMBER_OF_FILTERS_2 = 64
-    NUMBER_OF_FILTERS_3 = 128
-    NUMBER_OF_FILTERS_4 = 256
-    KERNEL_SIZE = 3
-    STRIDES = (1, 1)
-    POOL_SIZE = 3
+    INPUT_SHAPE = (64, 64, 3)
     DROPOUT_RATE = 0.5
     DENSE_UNITS = 512
 
     # String constants
-    PADDING = "same"
     ACTIVATION_FUNCTION = 'relu'
     SECOND_ACTIVATION_FUNCTION = 'softmax'
 
@@ -27,8 +20,8 @@ class CNNArchitecture:
 
     # Hyper parameters for training
     EPOCHS = 5
-    BATCH_SIZE = 64
-    VALIDATION_SPLIT = 0.1
+    BATCH_SIZE = 256
+    VALIDATION_SPLIT = 0.2
 
     def __init__(self):
         self.model = models.Sequential()
@@ -39,24 +32,25 @@ class CNNArchitecture:
         Method used to build the model what will be used for training.
         Override this method with your own implementation and subclass for trying out a different model.
         """
-        self.model.add(layers.Conv2D(filters=self.NUMBER_OF_FILTERS_2, kernel_size=self.KERNEL_SIZE,
-                                     strides=self.STRIDES, padding=self.PADDING, activation=self.ACTIVATION_FUNCTION,
+        self.model.add(layers.Conv2D(filters=32, kernel_size=2,
+                                     strides=(1, 1), padding="same", activation=self.ACTIVATION_FUNCTION,
                                      input_shape=self.INPUT_SHAPE))
-        self.model.add(layers.Conv2D(filters=self.NUMBER_OF_FILTERS_2, kernel_size=self.KERNEL_SIZE,
-                                     strides=self.STRIDES, padding=self.PADDING, activation=self.ACTIVATION_FUNCTION))
-        self.model.add(layers.MaxPooling2D(pool_size=self.POOL_SIZE))
+        self.model.add(layers.Conv2D(filters=64, kernel_size=3,
+                                     strides=(1, 1), padding="same", activation=self.ACTIVATION_FUNCTION))
+        self.model.add(layers.MaxPooling2D(pool_size=2))
 
-        self.model.add(layers.Conv2D(filters=self.NUMBER_OF_FILTERS_2, kernel_size=self.KERNEL_SIZE,
-                                     strides=self.STRIDES, padding=self.PADDING, activation=self.ACTIVATION_FUNCTION))
-        self.model.add(layers.Conv2D(filters=self.NUMBER_OF_FILTERS_3, kernel_size=self.KERNEL_SIZE,
-                                     strides=self.STRIDES, padding=self.PADDING, activation=self.ACTIVATION_FUNCTION))
-        self.model.add(layers.MaxPooling2D(pool_size=self.POOL_SIZE))
+        self.model.add(layers.Conv2D(filters=64, kernel_size=3,
+                                     strides=(1, 1), padding="same", activation=self.ACTIVATION_FUNCTION,
+                                     input_shape=self.INPUT_SHAPE))
+        self.model.add(layers.Conv2D(filters=64, kernel_size=3,
+                                     strides=(1, 1), padding="same", activation=self.ACTIVATION_FUNCTION))
+        self.model.add(layers.MaxPooling2D(pool_size=3))
 
-        self.model.add(layers.Conv2D(filters=self.NUMBER_OF_FILTERS_3, kernel_size=self.KERNEL_SIZE,
-                                     strides=self.STRIDES, padding=self.PADDING, activation=self.ACTIVATION_FUNCTION))
-        self.model.add(layers.Conv2D(filters=self.NUMBER_OF_FILTERS_4, kernel_size=self.KERNEL_SIZE,
-                                     strides=self.STRIDES, padding=self.PADDING, activation=self.ACTIVATION_FUNCTION))
-        self.model.add(layers.MaxPooling2D(pool_size=self.POOL_SIZE))
+        self.model.add(layers.Conv2D(filters=128, kernel_size=5,
+                                     strides=(1, 1), padding="same", activation=self.ACTIVATION_FUNCTION))
+        self.model.add(layers.Conv2D(filters=256, kernel_size=3,
+                                     strides=(1, 1), padding="same", activation=self.ACTIVATION_FUNCTION))
+        self.model.add(layers.MaxPooling2D(pool_size=5))
 
         self.model.add(layers.BatchNormalization())
         self.model.add(layers.Flatten())

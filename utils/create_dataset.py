@@ -31,21 +31,22 @@ def create_data_for_class(path_to_folder, class_name, is_binary=False, start_cou
         flipped_image = cv.flip(image, 1)
 
         if background_captured is True:
-            preprocessed_image = image_preprocessor.prepare_image_for_classification(flipped_image,
+            preprocessed_image, status = image_preprocessor.prepare_image_for_classification(flipped_image,
                                                                                          is_binary=is_binary,
                                                                                          with_cropping=with_cropping)
 
             if start:
                 save_path = os.path.join(image_path, class_name + '_{}.jpg'.format(start_count))
 
-                while True:
-                    stop_time = timeit.default_timer()
-                    difference = stop_time - start_time
+                # while True:
 
-                    if difference > 0.25:
-                        cv.imwrite(save_path, preprocessed_image)
-                        start_count = start_count + 1
-                        break
+                    #difference = stop_time - start_time
+
+                    # if difference > 0.25:
+                if status != -1:
+                    cv.imwrite(save_path, preprocessed_image)
+                    start_count = start_count + 1
+                        # break
 
             if start_count > end_count:
                 break

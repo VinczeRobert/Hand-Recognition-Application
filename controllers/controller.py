@@ -1,3 +1,4 @@
+import threading
 import cv2 as cv
 import numpy as np
 from base_constants.general_constants import IMAGE_SIZE_Y, IMAGE_SIZE_X, CLASSES, HAND, WEIGHTS_RIGHT_PATH, \
@@ -6,6 +7,7 @@ from model.cnn_architecture import CNNArchitecture
 from model.frame_captor import FrameCaptor
 from model.frame_displayer import FrameDisplayer
 from model.image_preprocessor import ImagePreprocessor
+from model.text_to_speech_converter import TextToSpeechConverter
 
 
 class Controller:
@@ -17,6 +19,7 @@ class Controller:
         self.image_preprocessor = ImagePreprocessor(hand_index, var_threshold)
         self.cnn_architecture = CNNArchitecture()
         self.cnn_architecture.build_model()
+        self.text_to_speech_converter = TextToSpeechConverter()
 
         if HAND[hand_index] == 'RIGHT':
             self.cnn_architecture.load_model(WEIGHTS_RIGHT_PATH)
@@ -59,6 +62,9 @@ class Controller:
                         iterations_between_different_predictions = 0
                         predicted_text = predicted_text + last_predicted_letter
 
+            voice_thread = threading.Thread(target=self.text_to_speech_converter.convert_text_to_speech,
+                                            kwargs={'text': new_predicted_letter})
+            voice_thread.start()
             self.frame_displayer.display_frame(flipped_image, new_predicted_letter, predicted_text)
 
             k = cv.waitKey(10)
