@@ -1,6 +1,9 @@
+import sys
 import threading
 import cv2 as cv
 import numpy as np
+from PyQt5 import QtWidgets
+
 from base_constants.general_constants import IMAGE_SIZE_Y, IMAGE_SIZE_X, CLASSES, HAND, WEIGHTS_RIGHT_PATH, \
     WEIGHTS_LEFT_PATH
 from model.cnn_architecture import CNNArchitecture
@@ -8,6 +11,7 @@ from model.frame_captor import FrameCaptor
 from model.frame_displayer import FrameDisplayer
 from model.image_preprocessor import ImagePreprocessor
 from model.text_to_speech_converter import TextToSpeechConverter
+from view.hand_gesture_recognition_view import HandGestureRecognitionView
 
 
 class Controller:
@@ -26,6 +30,13 @@ class Controller:
         else:
             self.cnn_architecture.load_model(WEIGHTS_LEFT_PATH)
 
+        app = QtWidgets.QApplication(sys.argv)
+        self.main_view = HandGestureRecognitionView()
+        self.main_view.prediction_button.clicked.connect(self.run_hand_prediction)
+        self.main_view.main_window.show()
+
+        sys.exit(app.exec_())
+
     def run_hand_prediction(self, is_binary=False, with_cropping=False):
         new_predicted_letter = None
         last_predicted_letter = None
@@ -36,6 +47,7 @@ class Controller:
         while True:
             image = self.frame_captor.read_frame()
             flipped_image = cv.flip(image, 1)
+
 
             if is_background_captured is True:
                 preprocessed_image, status = self.image_preprocessor.prepare_image_for_classification(flipped_image,
@@ -65,7 +77,8 @@ class Controller:
             voice_thread = threading.Thread(target=self.text_to_speech_converter.convert_text_to_speech,
                                             kwargs={'text': new_predicted_letter})
             voice_thread.start()
-            self.frame_displayer.display_frame(flipped_image, new_predicted_letter, predicted_text)
+            image = self.frame_displayer.display_frame(flipped_image, new_predicted_letter, predicted_text)
+            self.main_view.update_frame(image)
 
             k = cv.waitKey(10)
 

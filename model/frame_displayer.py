@@ -50,4 +50,5 @@ class FrameDisplayer:
         for i, line in enumerate(split_text):
             y = y0 + i * line_height
             cv.putText(frame, line, (0, y), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv.LINE_AA)
-        cv.imshow('Hand Recognition Application', frame)
+        # cv.imshow('Hand Recognition Application', frame)
+        return frame
