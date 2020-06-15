@@ -1,6 +1,6 @@
 import os
 import cv2 as cv
-from base_constants.general_constants import CLASSES
+from base_constants.constants import CLASSES
 from exceptions import ImageNotLoadedException
 from model.frame_captor import FrameCaptor
 from preprocessing.constants import FOLDER_CONVERSIONS

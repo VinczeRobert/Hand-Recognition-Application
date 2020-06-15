@@ -1,7 +1,17 @@
-from controllers.controller import Controller
+import sys
+from PyQt5 import QtWidgets
+from controllers.main_controller import MainController
+from controllers.settings_controller import SettingsController
+
+StyleSheet = '''
+QPushButton:hover {
+   background-color: #000000;
+   color: #579641;
+}
+'''
 
 if __name__ == '__main__':
-
-    camera_init_url = "http://192.168.1.103:8080"
-    controller = Controller(hand_index=1)
-    controller.run_hand_prediction(is_binary=True)
+    app = QtWidgets.QApplication(sys.argv)
+    MainController()
+    SettingsController()
+    sys.exit(app.exec_())

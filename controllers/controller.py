@@ -4,7 +4,7 @@ import cv2 as cv
 import numpy as np
 from PyQt5 import QtWidgets
 
-from base_constants.general_constants import IMAGE_SIZE_Y, IMAGE_SIZE_X, CLASSES, HAND, WEIGHTS_RIGHT_PATH, \
+from base_constants.constants import IMAGE_SIZE_Y, IMAGE_SIZE_X, CLASSES, HAND, WEIGHTS_RIGHT_PATH, \
     WEIGHTS_LEFT_PATH
 from model.cnn_architecture import CNNArchitecture
 from model.frame_captor import FrameCaptor
@@ -37,7 +37,7 @@ class Controller:
 
         sys.exit(app.exec_())
 
-    def run_hand_prediction(self, is_binary=False, with_cropping=False):
+    def run_hand_prediction(self, is_binary=False):
         new_predicted_letter = None
         last_predicted_letter = None
         iterations_between_different_predictions = 0
@@ -51,8 +51,7 @@ class Controller:
 
             if is_background_captured is True:
                 preprocessed_image, status = self.image_preprocessor.prepare_image_for_classification(flipped_image,
-                                                                                              is_binary=is_binary,
-                                                                                              with_cropping=with_cropping)
+                                                                                              is_binary=is_binary)
                 if status == -1:
                     new_predicted_letter = -1
                 else:

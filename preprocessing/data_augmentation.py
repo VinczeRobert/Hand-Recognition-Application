@@ -1,6 +1,6 @@
 import os
 import cv2 as cv
-from base_constants.general_constants import CLASSES
+from base_constants.constants import CLASSES
 from exceptions import ImageNotLoadedException
 from preprocessing.constants import ROTATION_ANGLE_LOWER_LIMIT, SCALING_FACTOR_LOWER_LIMIT, ROTATION_ANGLE_UPPER_LIMIT, \
     SCALING_FACTOR_UPPER_LIMIT

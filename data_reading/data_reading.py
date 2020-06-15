@@ -4,7 +4,7 @@ import h5py
 import numpy as np
 from sklearn.model_selection import train_test_split
 
-from base_constants.general_constants import NUMBER_OF_CLASSES, SPLIT_RATIO, NUMBER_OF_IMAGES, CLASSES, OWN_DATA_PATH, \
+from base_constants.constants import NUMBER_OF_CLASSES, SPLIT_RATIO, NUMBER_OF_IMAGES, CLASSES, OWN_DATA_PATH, \
     IMAGE_SIZE_X, IMAGE_SIZE_Y
 from exceptions import ImageNotLoadedException
 

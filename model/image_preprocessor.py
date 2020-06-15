@@ -1,6 +1,6 @@
 import cv2 as cv
 import numpy as np
-from base_constants.general_constants import HAND
+from base_constants.constants import HAND
 
 
 class ImagePreprocessor:
@@ -9,7 +9,7 @@ class ImagePreprocessor:
         self.hand_index = hand_index
         self.var_threshold = var_threshold
 
-    def prepare_image_for_classification(self, image, is_binary, with_cropping):
+    def prepare_image_for_classification(self, image, is_binary):
         # STEP 1: Remove noise
         filtered_image = cv.bilateralFilter(image, 9, 75, 75)
 
@@ -56,12 +56,6 @@ class ImagePreprocessor:
             else:
                 # STEP 8 (IF BINARY): extend the one-channeled binary image to three channels
                 extracted_hand = cv.cvtColor(contoured_image,cv.COLOR_GRAY2RGB)
-
-            if with_cropping:
-                # STEP 8 (OPTIONAL): Crop the image around the hand
-                x, y, w, h = cv.boundingRect(largest_contour)
-                cropped_image = extracted_hand[y:y + h, x:x + w]
-                return cropped_image
 
             cv.imshow('Extracted Hand', extracted_hand)
             return extracted_hand, 0

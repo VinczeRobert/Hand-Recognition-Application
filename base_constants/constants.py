@@ -6,11 +6,8 @@ IMAGE_SIZE_X = 64
 IMAGE_SIZE_Y = 64
 SPLIT_RATIO = 0.1
 
-DATA_EXTENSION = '.h5'
-
-RUN_MODES = ['CLIENT_MODE', 'DEVELOPER_MODE']
 HAND = ['RIGHT', 'LEFT']
-CAPTURING_MODE = ['PC_CAMERA', 'ANDROID_CAMERA']
+IMAGE_TYPE = ['RGB', 'BINARY']
 
 H5_PATH = 'data/h5/hra_training_data.h5'
 WEIGHTS_LEFT_PATH = 'data/weights/left_hand_rgb_29.ckpt'

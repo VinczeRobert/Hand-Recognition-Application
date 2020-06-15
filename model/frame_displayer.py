@@ -1,4 +1,4 @@
-from base_constants.general_constants import HAND
+from base_constants.constants import HAND
 import cv2 as cv
 
 

@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from base_constants.general_constants import CLASSES
+from base_constants.constants import CLASSES
 
 
 class ImageViewer:

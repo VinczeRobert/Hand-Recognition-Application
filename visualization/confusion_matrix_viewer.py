@@ -1,7 +1,7 @@
 import pandas as pd
 import seaborn as sn
 import matplotlib.pyplot as plt
-from base_constants.general_constants import CLASSES, NUMBER_OF_CLASSES
+from base_constants.constants import CLASSES, NUMBER_OF_CLASSES
 
 
 class ConfusionMatrixViewer:

@@ -1,6 +1,6 @@
 from keras import models, layers, losses, regularizers, callbacks
 from sklearn import metrics
-from base_constants.general_constants import NUMBER_OF_CLASSES, IMAGE_SIZE_X, IMAGE_SIZE_Y, WEIGHTS_LEFT_PATH
+from base_constants.constants import NUMBER_OF_CLASSES, IMAGE_SIZE_X, IMAGE_SIZE_Y, WEIGHTS_LEFT_PATH
 import numpy as np
 
 
@@ -26,6 +26,8 @@ class CNNArchitecture:
     def __init__(self):
         self.model = models.Sequential()
         self.history = None
+        self.classes = ['A', 'B', 'C', 'D', 'Delete', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'NewLine', 'O',
+                        'P', 'Q', 'R', 'S', 'Space', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
     def build_model(self):
         """

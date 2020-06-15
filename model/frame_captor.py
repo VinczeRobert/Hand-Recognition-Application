@@ -1,7 +1,7 @@
 import requests
 import cv2 as cv
 import numpy as np
-from base_constants.general_constants import CAPTURING_MODE, HAND
+from base_constants.constants import CAPTURING_MODE, HAND
 from requests.exceptions import ConnectionError, Timeout
 
 class FrameCaptor:
