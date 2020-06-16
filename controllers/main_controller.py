@@ -7,4 +7,6 @@ class MainController:
     def __init__(self):
 
         self.main_view = MainView.get_instance()
-        # self.main_view.show()
+        self.main_view.show()
+
+

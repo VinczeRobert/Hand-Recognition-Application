@@ -1,56 +1,55 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
+from view.style_sheets.main_view_stylesheet import MAIN_BUTTON_STYLE_SHEET, SOLID_BORDER_STYLE_SHEET
 
 
-class HandGestureRecognitionView:
-    def __init__(self):
-        self.main_window = QtWidgets.QMainWindow()
-        self.central_widget = QtWidgets.QWidget(self.main_window)
+# noinspection PyArgumentList
+class HandGestureRecognitionView(QtWidgets.QWidget):
 
-        self.graphics_view = QtWidgets.QGraphicsView(self.central_widget)
-        self.graphics_scene = QtWidgets.QGraphicsScene()
+    keyPressed = QtCore.pyqtSignal(int)
+
+    def __init__(self, parent=None):
+        super(HandGestureRecognitionView, self).__init__(parent)
+
+        self.recognition_graphics_view = QtWidgets.QGraphicsView(self)
+        self.recognition_graphics_scene = QtWidgets.QGraphicsScene()
         self.pixmap = QtWidgets.QGraphicsPixmapItem()
 
-        self.menu_bar = QtWidgets.QMenuBar(self.main_window)
-        self.status_bar = QtWidgets.QStatusBar(self.main_window)
-        self.prediction_button = QtWidgets.QPushButton(self.central_widget)
+        self.load_text_button = QtWidgets.QPushButton(self)
+        self.save_text_button = QtWidgets.QPushButton(self)
 
-        self.setup_window()
+        self.setup_page()
 
-    def setup_window(self):
-        self.main_window.setObjectName("MainView")
-        self.main_window.resize(1400, 900)
+    def setup_page(self):
+        self.recognition_graphics_view.setGeometry(QtCore.QRect(0, 0, 1285, 725))
+        self.recognition_graphics_view.setObjectName("recognition_graphics_view")
 
-        self.central_widget.setObjectName("centralWidget")
+        self.recognition_graphics_scene.addItem(self.pixmap)
+        self.recognition_graphics_view.setScene(self.recognition_graphics_scene)
+        # self.recognition_graphics_view.setStyleSheet(SOLID_BORDER_STYLE_SHEET)
 
-        self.graphics_view.setGeometry(QtCore.QRect(0, 0, 1200, 700))
-        self.graphics_view.setObjectName("graphicsView")
-        self.main_window.setCentralWidget(self.central_widget)
+        self.load_text_button.setGeometry(QtCore.QRect(1340, 50, 150, 60))
+        self.load_text_button.setStyleSheet(MAIN_BUTTON_STYLE_SHEET)
+        self.load_text_button.setObjectName("load_text_button")
 
-        self.graphics_scene.addItem(self.pixmap)
-        self.graphics_view.setScene(self.graphics_scene)
+        self.save_text_button.setGeometry(QtCore.QRect(1340, 170, 150, 60))
+        self.save_text_button.setStyleSheet(MAIN_BUTTON_STYLE_SHEET)
+        self.save_text_button.setObjectName("save_text_button")
 
-        self.menu_bar.setGeometry(QtCore.QRect(0, 0, 1400, 26))
-        self.menu_bar.setObjectName("menuBar")
-        self.main_window.setMenuBar(self.menu_bar)
+        self.retranslate_view()
 
-        self.status_bar.setObjectName("statusBar")
-        self.main_window.setStatusBar(self.status_bar)
-
-        self.prediction_button.setGeometry(QtCore.QRect(540, 730, 121, 41))
-        self.prediction_button.setObjectName("predictionButton")
-
-        self.retranslate_window()
-        QtCore.QMetaObject.connectSlotsByName(self.main_window)
-
-    def retranslate_window(self):
+    def retranslate_view(self):
         _translate = QtCore.QCoreApplication.translate
-        self.main_window.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.load_text_button.setText(_translate("self", "Load Text"))
+        self.save_text_button.setText(_translate("self", "Save Text"))
+
+    def keyPressEvent(self, key_event):
+        super(HandGestureRecognitionView, self).keyPressEvent(key_event)
+        self.keyPressed.emit(key_event.key())
 
     def update_frame(self, image):
         height, width, channel = image.shape
-        bytesPerLine = 3 * width
-        qImg = QtGui.QImage(image.data, width, height, bytesPerLine, QtGui.QImage.Format_RGB888)
+        bytes_per_line = 3 * width
+        qImg = QtGui.QImage(image.data, width, height, bytes_per_line, QtGui.QImage.Format_RGB888)
         new_image = QtGui.QPixmap(qImg)
         self.pixmap.setPixmap(new_image)
-
 

@@ -9,7 +9,7 @@ class FrameDisplayer:
     def display_frame(self, frame, predicted_letter, predicted_text):
         # If the user wants to use his/her left hand, the rectangle representing the area of interest will
         # be shown on the upper-left corner
-        if HAND[self.hand_index] == 'RIGHT':
+        if self.hand_index == HAND[0]:
             cv.rectangle(frame, (800, 0), (1280, 480), (0, 255, 0), 2)
         else:
             # otherwise on the upper-right corner

@@ -2,6 +2,8 @@ from base_constants.constants import HAND, IMAGE_TYPE
 
 
 class Settings:
+    _instance = None
+
     def __init__(self):
         self.hand = HAND[0]
         self.image_type = IMAGE_TYPE[0]
@@ -17,6 +19,12 @@ class Settings:
             "Contoured Image": False,
             "Final Image": False
         }
+
+    @staticmethod
+    def get_instance():
+        if Settings._instance is None:
+            Settings._instance = Settings()
+        return Settings._instance
 
     def switch_vocal_mode(self):
         self.vocal_mode = not self.vocal_mode

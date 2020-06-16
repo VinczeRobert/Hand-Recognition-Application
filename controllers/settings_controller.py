@@ -4,7 +4,7 @@ from view.main_view import MainView
 
 class SettingsController:
     def __init__(self):
-        self.settings = Settings()
+        self.settings = Settings.get_instance()
         main_view = MainView.get_instance()
         self.settings_view = main_view.settings_view
         self.settings_view.vocal_mode_checkbox.stateChanged.connect(lambda: self.settings.switch_vocal_mode())
@@ -20,4 +20,4 @@ class SettingsController:
         for checkbox in self.settings_view.vertical_group_box.children()[1:]:
             checkbox.stateChanged.connect(lambda state, checkbox=checkbox: self.settings.set_intermediary_step(checkbox))
 
-        main_view.show()
+

@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from view.hand_recognition_view import HandRecognitionView
+from view.hand_gesture_recognition_view import HandGestureRecognitionView
 from view.settings_view import SettingsView
 from view.style_sheets.main_view_stylesheet import MAIN_WINDOW_STYLE_SHEET, MAIN_BUTTON_STYLE_SHEET, \
     MAIN_PICTURE_STYLE_SHEET, REST_LETTERS_LABEL_STYLE_SHEET, FIRST_LETTERS_LABEL_STYLE_SHEET, NO_BORDER_STYLE_SHEET, \
@@ -18,19 +18,16 @@ class MainView(QtWidgets.QMainWindow):
 
         self.home_view = HomeView()
         self.settings_view = SettingsView()
-        self.hand_recognition_view = HandRecognitionView()
+        self.hand_gesture_recognition_view = HandGestureRecognitionView()
 
         self.central_widget.addWidget(self.home_view)
         self.central_widget.addWidget(self.settings_view)
-        self.central_widget.addWidget(self.hand_recognition_view)
+        self.central_widget.addWidget(self.hand_gesture_recognition_view)
 
         self.central_widget.setCurrentWidget(self.home_view)
 
-        self.vertical_group_box = QtWidgets.QGroupBox(self)
-        self.vertical_layout = QtWidgets.QVBoxLayout(self.vertical_group_box)
-
         self.horizontal_group_box = QtWidgets.QGroupBox(self)
-        self.horizontal_group_box.setGeometry(QtCore.QRect(90, 700, 1441, 181))
+        self.horizontal_group_box.setGeometry(QtCore.QRect(90, 750, 1440, 180))
         self.horizontal_layout = QtWidgets.QHBoxLayout(self.horizontal_group_box)
 
         self.size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
@@ -53,7 +50,7 @@ class MainView(QtWidgets.QMainWindow):
         self.setup_window()
         self.settings_button.clicked.connect(lambda: self.central_widget.setCurrentWidget(self.settings_view))
         self.hand_gesture_recognition_button.clicked.connect(lambda: self.central_widget.setCurrentWidget(
-            self.hand_recognition_view))
+            self.hand_gesture_recognition_view))
 
     def setup_window(self):
         self.setObjectName("main_window")

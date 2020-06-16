@@ -4,10 +4,9 @@ from base_constants.constants import HAND
 
 
 class ImagePreprocessor:
-    def __init__(self, hand_index=0, var_threshold=50):
+    def __init__(self, hand_index=0):
         self.background_subtractor = None
         self.hand_index = hand_index
-        self.var_threshold = var_threshold
 
     def prepare_image_for_classification(self, image, is_binary):
         # STEP 1: Remove noise
@@ -17,7 +16,7 @@ class ImagePreprocessor:
         binary_image = self.background_subtractor.apply(filtered_image, learningRate=0)
 
         # STEP 3: Extract only the hand part from the difference
-        if HAND[self.hand_index] == 'RIGHT':
+        if self.hand_index == 'RIGHT':
             extracted_mask = binary_image[0:480, 800:1280]
             extracted_image = image[0:480, 800:1280]
         else:
@@ -61,4 +60,4 @@ class ImagePreprocessor:
             return extracted_hand, 0
 
     def set_background_subtractor(self):
-        self.background_subtractor = cv.createBackgroundSubtractorMOG2(0, self.var_threshold, detectShadows=False)
+        self.background_subtractor = cv.createBackgroundSubtractorMOG2(0, 50, detectShadows=False)

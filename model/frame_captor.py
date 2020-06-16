@@ -1,7 +1,6 @@
 import requests
 import cv2 as cv
 import numpy as np
-from base_constants.constants import CAPTURING_MODE, HAND
 from requests.exceptions import ConnectionError, Timeout
 
 class FrameCaptor:
@@ -14,6 +13,7 @@ class FrameCaptor:
         :param hand: 0 for right hand, 1 for left hand
         """
         self._init_url = init_url + '/shot.jpg'
+        self._is_android_server = False
         self._capturing_mode = None
         self._camera = None
 
@@ -22,7 +22,7 @@ class FrameCaptor:
         if self._init_url != '/shot.jpg':
             try:
                 requests.get(self._init_url, timeout=5)
-                self._capturing_mode = 1
+                self._is_android_server = True
                 return
             except (ConnectionError, Timeout) as e:
                 print(e)
@@ -41,7 +41,7 @@ class FrameCaptor:
         :param predicted_letter: the response of the CNNArchitecture for the currently shown hand sign
         :return: frame with messages
         """
-        if CAPTURING_MODE[self._capturing_mode] == 'PC_CAMERA':
+        if self._is_android_server is False:
             _, frame = self._camera.read()
         else:
             image_response = requests.get(self._init_url)
