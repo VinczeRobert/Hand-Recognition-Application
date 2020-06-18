@@ -83,7 +83,7 @@ class SettingsView(QtWidgets.QWidget):
         self.form_layout.setContentsMargins(-1, 5, -1, -1)
         self.form_layout.setHorizontalSpacing(12)
         self.form_layout.setVerticalSpacing(50)
-        self.form_layout.setObjectName("formLayout")
+        self.form_layout.setObjectName("form_layout")
 
         self.android_server_url_label.setObjectName("android_server_url_label")
         self.form_layout.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.android_server_url_label)
@@ -153,3 +153,20 @@ class SettingsView(QtWidgets.QWidget):
         self.rgb_images_radio_button.setText(_translate("self", "RGB Images"))
         self.binary_image_radio_button.setText(_translate("self", "Binary Images"))
         self.image_type_label.setText(_translate("self", "Choose Image Type"))
+
+    def set_view_options(self, data):
+        if data['hand'] == 'LEFT':
+            self.left_hand_radio_button.setChecked(True)
+        else:
+            self.right_hand_radio_button.setChecked(True)
+
+        if data['image_type'] == 'BINARY':
+            self.binary_image_radio_button.setChecked(True)
+        else:
+            self.rgb_images_radio_button.setChecked(True)
+
+        if data['vocal_mode']:
+            self.vocal_mode_checkbox.setChecked(True)
+
+        self.android_server_url_line_edit.setText(data['android_server_url'])
+        self.h5_path_line_edit.setText(data['h5_path'])

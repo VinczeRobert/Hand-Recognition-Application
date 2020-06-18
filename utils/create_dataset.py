@@ -7,7 +7,7 @@ from model.image_preprocessor import ImagePreprocessor
 
 
 def create_data_for_class(path_to_folder, class_name, is_binary=False, start_count=1, end_count=1000,
-                          camera_init_url='', hand_index=0, var_threshold=50):
+                          camera_init_url='', hand_index=0):
     # Creating folders if they are not existing
     if not os.path.exists(path_to_folder):
         os.mkdir(path_to_folder)
@@ -20,7 +20,7 @@ def create_data_for_class(path_to_folder, class_name, is_binary=False, start_cou
     # Initializing
     frame_captor = FrameCaptor(camera_init_url)
     frame_captor.set_capture_mode()
-    image_preprocessor = ImagePreprocessor(hand_index, var_threshold)
+    image_preprocessor = ImagePreprocessor(hand_index)
     frame_display = FrameDisplayer(hand_index)
     start = False
     background_captured = False

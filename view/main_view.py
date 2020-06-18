@@ -1,5 +1,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QAction
 
+from view.add_new_sign_view import AddNewSignView
 from view.hand_gesture_recognition_view import HandGestureRecognitionView
 from view.settings_view import SettingsView
 from view.style_sheets.main_view_stylesheet import MAIN_WINDOW_STYLE_SHEET, MAIN_BUTTON_STYLE_SHEET, \
@@ -11,6 +14,8 @@ from view.style_sheets.main_view_stylesheet import MAIN_WINDOW_STYLE_SHEET, MAIN
 class MainView(QtWidgets.QMainWindow):
     _instance = None
 
+    closed = pyqtSignal()
+
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self, parent)
         self.central_widget = QtWidgets.QStackedWidget()
@@ -19,10 +24,12 @@ class MainView(QtWidgets.QMainWindow):
         self.home_view = HomeView()
         self.settings_view = SettingsView()
         self.hand_gesture_recognition_view = HandGestureRecognitionView()
+        self.add_new_sign_view = AddNewSignView()
 
         self.central_widget.addWidget(self.home_view)
         self.central_widget.addWidget(self.settings_view)
         self.central_widget.addWidget(self.hand_gesture_recognition_view)
+        self.central_widget.addWidget(self.add_new_sign_view)
 
         self.central_widget.setCurrentWidget(self.home_view)
 
@@ -51,6 +58,9 @@ class MainView(QtWidgets.QMainWindow):
         self.settings_button.clicked.connect(lambda: self.central_widget.setCurrentWidget(self.settings_view))
         self.hand_gesture_recognition_button.clicked.connect(lambda: self.central_widget.setCurrentWidget(
             self.hand_gesture_recognition_view))
+        self.new_gesture_button.clicked.connect(lambda: self.central_widget.setCurrentWidget(
+            self.add_new_sign_view
+        ))
 
     def setup_window(self):
         self.setObjectName("main_window")
@@ -131,6 +141,10 @@ class MainView(QtWidgets.QMainWindow):
         if MainView._instance is None:
             MainView._instance = MainView()
         return MainView._instance
+
+    def closeEvent(self, event):
+        self.closed.emit()
+        QtWidgets.QMainWindow.closeEvent(self, event)
 
 
 # noinspection PyArgumentList

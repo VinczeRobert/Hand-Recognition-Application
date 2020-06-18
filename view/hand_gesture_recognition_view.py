@@ -25,7 +25,6 @@ class HandGestureRecognitionView(QtWidgets.QWidget):
 
         self.recognition_graphics_scene.addItem(self.pixmap)
         self.recognition_graphics_view.setScene(self.recognition_graphics_scene)
-        # self.recognition_graphics_view.setStyleSheet(SOLID_BORDER_STYLE_SHEET)
 
         self.load_text_button.setGeometry(QtCore.QRect(1340, 50, 150, 60))
         self.load_text_button.setStyleSheet(MAIN_BUTTON_STYLE_SHEET)

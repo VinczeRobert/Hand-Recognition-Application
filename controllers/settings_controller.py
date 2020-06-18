@@ -20,4 +20,9 @@ class SettingsController:
         for checkbox in self.settings_view.vertical_group_box.children()[1:]:
             checkbox.stateChanged.connect(lambda state, checkbox=checkbox: self.settings.set_intermediary_step(checkbox))
 
+        self.settings_view.set_view_options(self.settings.__dict__)
+
+
+
+
 

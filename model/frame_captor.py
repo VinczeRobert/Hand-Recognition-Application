@@ -49,4 +49,5 @@ class FrameCaptor:
             frame = cv.imdecode(image_array, -1)
             frame = cv.resize(frame, (1280, 720))
 
+        frame = cv.flip(frame, 1)
         return frame

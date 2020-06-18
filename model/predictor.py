@@ -16,7 +16,7 @@ class Predictor:
 
         self.text_to_speech_converter = TextToSpeechConverter()
 
-    def predict_hand_gesture(self, image):
+    def predict_hand_gesture(self, image, vocal_mode):
         resized_image = cv.resize(image, (IMAGE_SIZE_X, IMAGE_SIZE_Y))
         cnn_input = np.array(np.zeros(shape=(1, IMAGE_SIZE_X, IMAGE_SIZE_Y, 3)))
         normalized_input = cv.normalize(resized_image, None, alpha=0, beta=1, norm_type=cv.NORM_MINMAX,
@@ -26,9 +26,10 @@ class Predictor:
         predicted_class = self.cnn_architecture.predict_classes_for_images(cnn_input)[0]
         new_predicted_letter = CLASSES[predicted_class]
 
-        voice_thread = threading.Thread(target=self.text_to_speech_converter.convert_text_to_speech,
+        if vocal_mode:
+            voice_thread = threading.Thread(target=self.text_to_speech_converter.convert_text_to_speech,
                                         kwargs={'text': new_predicted_letter})
-        voice_thread.start()
+            voice_thread.start()
 
         return new_predicted_letter
 

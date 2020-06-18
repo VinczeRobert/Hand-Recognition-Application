@@ -1,3 +1,4 @@
+import pickle
 from base_constants.constants import HAND, IMAGE_TYPE
 
 
@@ -5,6 +6,7 @@ class Settings:
     _instance = None
 
     def __init__(self):
+
         self.hand = HAND[0]
         self.image_type = IMAGE_TYPE[0]
         self.vocal_mode = False
@@ -20,10 +22,13 @@ class Settings:
             "Final Image": False
         }
 
+        self.deserialize()
+
     @staticmethod
     def get_instance():
         if Settings._instance is None:
-            Settings._instance = Settings()
+            if Settings.deserialize() != 0:
+                Settings._instance = Settings()
         return Settings._instance
 
     def switch_vocal_mode(self):
@@ -43,4 +48,18 @@ class Settings:
 
     def set_intermediary_step(self, field):
         self.intermediary_steps[field.text()] = field.isChecked()
-        print(self.intermediary_steps)
+
+    def serialize(self):
+        with open('settings', 'wb') as f:
+            pickle.dump(self, f)
+        return 0
+
+    #TODO: Serialization-Deserialization has some issues. First we should see if it's worth doing it at all and if yes, then correct it
+    @staticmethod
+    def deserialize():
+        try:
+            with open('settings', 'rb') as f:
+                Settings._instance = pickle.load(f)
+            return 0
+        except FileNotFoundError:
+            return -1

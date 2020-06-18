@@ -20,4 +20,7 @@ QPushButton::hover {
    color: #579641;
 }
 '''
-
+FORM_GROUP_BOX_STYLE_SHEET = '''
+font-size: 20px;
+border: none;
+'''
