@@ -10,7 +10,7 @@ from model.text_to_speech_converter import TextToSpeechConverter
 class Predictor:
 
     def __init__(self, weights_path):
-        self.cnn_architecture = CNNArchitecture()
+        self.cnn_architecture = CNNArchitecture.get_instance()
         self.cnn_architecture.build_model()
         self.cnn_architecture.load_model(weights_path)
 

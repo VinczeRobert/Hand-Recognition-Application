@@ -1,7 +1,7 @@
 CLASSES = ['A', 'B', 'C', 'D', 'Delete', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'NewLine', 'O', 'P', 'Q', 'R', 'S',
            'Space', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 NUMBER_OF_CLASSES = 29
-NUMBER_OF_IMAGES = 1815
+NUMBER_OF_IMAGES = 58000
 IMAGE_SIZE_X = 64
 IMAGE_SIZE_Y = 64
 SPLIT_RATIO = 0.1

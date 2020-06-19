@@ -11,6 +11,9 @@ from view.style_sheets.main_view_stylesheet import MAIN_WINDOW_STYLE_SHEET, MAIN
 
 
 # noinspection PyArgumentList
+from view.train_neural_network_view import TrainNeuralNetworkView
+
+
 class MainView(QtWidgets.QMainWindow):
     _instance = None
 
@@ -25,11 +28,13 @@ class MainView(QtWidgets.QMainWindow):
         self.settings_view = SettingsView()
         self.hand_gesture_recognition_view = HandGestureRecognitionView()
         self.add_new_sign_view = AddNewSignView()
+        self.train_neural_network_view = TrainNeuralNetworkView()
 
         self.central_widget.addWidget(self.home_view)
         self.central_widget.addWidget(self.settings_view)
         self.central_widget.addWidget(self.hand_gesture_recognition_view)
         self.central_widget.addWidget(self.add_new_sign_view)
+        self.central_widget.addWidget(self.train_neural_network_view)
 
         self.central_widget.setCurrentWidget(self.home_view)
 
@@ -61,6 +66,8 @@ class MainView(QtWidgets.QMainWindow):
         self.new_gesture_button.clicked.connect(lambda: self.central_widget.setCurrentWidget(
             self.add_new_sign_view
         ))
+        self.train_neural_network_button.clicked.connect(lambda: self.central_widget.setCurrentWidget(
+            self.train_neural_network_view))
 
     def setup_window(self):
         self.setObjectName("main_window")

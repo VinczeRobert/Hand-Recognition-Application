@@ -3,8 +3,7 @@ import cv2 as cv
 import h5py
 import numpy as np
 from sklearn.model_selection import train_test_split
-
-from base_constants.constants import NUMBER_OF_CLASSES, SPLIT_RATIO, NUMBER_OF_IMAGES, CLASSES, OWN_DATA_PATH, \
+from base_constants.constants import SPLIT_RATIO, NUMBER_OF_IMAGES, CLASSES, OWN_DATA_PATH, \
     IMAGE_SIZE_X, IMAGE_SIZE_Y
 from exceptions import ImageNotLoadedException
 
@@ -25,12 +24,17 @@ class TrainingDataReader:
         self.testing_class_labels = None
         self.counter = 0
 
-    def read_training_data(self):
+    def read_training_data(self, dataset_path, h5_path=None):
         """
         Obtains folder with data from the next class and calls 'read_data_for_one_class' to actually read the data
         """
+
+        if h5_path is not None:
+            self.load_from_h5(h5_path)
+            return 0
+
         for category in CLASSES:
-            path = os.path.join(OWN_DATA_PATH, category)
+            path = os.path.join(dataset_path, category)
             class_num = CLASSES.index(category)
             self.read_data_for_one_class(path, class_num)
 
