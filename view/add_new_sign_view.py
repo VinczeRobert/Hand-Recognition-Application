@@ -1,103 +1,67 @@
 import os
+from PyQt5 import QtCore
+from PyQt5.QtWidgets import QPushButton, QGroupBox, QFormLayout, QLabel, QLineEdit, QFileDialog
+from view.hand_graphics_view import HandGraphicsView
+from view.style_sheets.main_view_stylesheet import BUTTON_STYLE_SHEET, LINE_EDIT_STYLE_SHEET, LABEL_STYLE_SHEET
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from view.style_sheets.main_view_stylesheet import MAIN_BUTTON_STYLE_SHEET, FORM_GROUP_BOX_STYLE_SHEET
 
 # noinspection PyArgumentList
-class AddNewSignView(QtWidgets.QWidget):
+class AddNewSignView(HandGraphicsView):
 
-    keyPressed = QtCore.pyqtSignal(int)
+    def __init__(self):
+        super(AddNewSignView, self).__init__()
 
-    def __init__(self, parent=None):
-        super(AddNewSignView, self).__init__(parent)
+        self.load_text_button = QPushButton("Select Path", self)
+        self.start_saving_button = QPushButton("Start", self)
 
-        self.new_sign_graphics_view = QtWidgets.QGraphicsView(self)
-        self.new_sign_graphics_scene = QtWidgets.QGraphicsScene()
-        self.pixmap = QtWidgets.QGraphicsPixmapItem()
+        self.form_group_box = QGroupBox(self)
+        self.form_layout = QFormLayout(self.form_group_box)
 
-        self.load_text_button = QtWidgets.QPushButton(self)
-        self.start_saving_button = QtWidgets.QPushButton(self)
+        self.class_name_label = QLabel("Class name:", self.form_group_box)
+        self.class_name_line_edit = QLineEdit(self.form_group_box)
+        self.start_index_label = QLabel("Start index: ", self.form_group_box)
+        self.start_index_line_edit = QLineEdit(self.form_group_box)
+        self.end_index_label = QLabel("End index: ",self.form_group_box)
+        self.end_index_line_edit = QLineEdit(self.form_group_box)
 
-        self.form_group_box = QtWidgets.QGroupBox(self)
-        self.form_layout = QtWidgets.QFormLayout(self.form_group_box)
+        self.download_path_label = QLabel("No path has been chosen", self)
 
-        self.class_name_label = QtWidgets.QLabel(self.form_group_box)
-        self.class_name_line_edit = QtWidgets.QLineEdit(self.form_group_box)
-        self.start_index_label = QtWidgets.QLabel(self.form_group_box)
-        self.start_index_line_edit = QtWidgets.QLineEdit(self.form_group_box)
-        self.end_index_label = QtWidgets.QLabel(self.form_group_box)
-        self.end_index_line_edit = QtWidgets.QLineEdit(self.form_group_box)
+        self.setup_view()
 
-        self.download_path_label = QtWidgets.QLabel(self)
-
-        self.setup_page()
-
-    def setup_page(self):
-        self.new_sign_graphics_view.setGeometry(QtCore.QRect(0, 0, 1285, 725))
-        self.new_sign_graphics_view.setObjectName("new_sign_graphics_view")
-
-        self.new_sign_graphics_scene.addItem(self.pixmap)
-        self.new_sign_graphics_view.setScene(self.new_sign_graphics_scene)
-
+    def setup_view(self):
+        super(AddNewSignView, self).setup_view()
         self.load_text_button.setGeometry(QtCore.QRect(1300, 50, 150, 60))
-        self.load_text_button.setStyleSheet(MAIN_BUTTON_STYLE_SHEET)
-        self.load_text_button.setObjectName("load_text_button")
+        self.load_text_button.setStyleSheet(BUTTON_STYLE_SHEET)
+
+        self.start_saving_button.setGeometry(QtCore.QRect(1300, 400, 150, 60))
+        self.start_saving_button.setStyleSheet(BUTTON_STYLE_SHEET)
 
         self.form_group_box.setGeometry(QtCore.QRect(1300, 230, 311, 161))
-        self.form_group_box.setStyleSheet(FORM_GROUP_BOX_STYLE_SHEET)
-        self.form_group_box.setObjectName("form_group_box")
+        self.form_group_box.setStyleSheet("border: none;")
 
         self.form_layout.setLabelAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.form_layout.setFormAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTop|QtCore.Qt.AlignTrailing)
         self.form_layout.setVerticalSpacing(20)
-        self.form_layout.setObjectName("form_layout")
 
-        self.class_name_line_edit.setStyleSheet("border: 5px solid black;")
-        self.class_name_line_edit.setObjectName("class_name_line_edit")
-        self.form_layout.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.class_name_line_edit)
-        self.start_index_label.setObjectName("start_index_label")
-        self.form_layout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.start_index_label)
-        self.start_index_line_edit.setStyleSheet("border: 5px solid black;")
-        self.start_index_line_edit.setObjectName("start_index_line_edit")
-        self.form_layout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.start_index_line_edit)
-        self.end_index_label.setObjectName("end_index_label")
-        self.form_layout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.end_index_label)
-        self.end_index_line_edit.setStyleSheet("border: 5px solid black;")
-        self.end_index_line_edit.setObjectName("end_index_line_edit")
-        self.form_layout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.end_index_line_edit)
+        self.form_layout.setWidget(0, QFormLayout.LabelRole, self.class_name_label)
+        self.form_layout.setWidget(0, QFormLayout.FieldRole, self.class_name_line_edit)
+        self.form_layout.setWidget(1, QFormLayout.LabelRole, self.start_index_label)
+        self.form_layout.setWidget(1, QFormLayout.FieldRole, self.start_index_line_edit)
+        self.form_layout.setWidget(2, QFormLayout.LabelRole, self.end_index_label)
+        self.form_layout.setWidget(2, QFormLayout.FieldRole, self.end_index_line_edit)
 
-        self.start_saving_button.setGeometry(QtCore.QRect(1300, 400, 150, 60))
-        self.start_saving_button.setStyleSheet(MAIN_BUTTON_STYLE_SHEET)
-        self.start_saving_button.setObjectName("start_saving_button")
+        self.class_name_label.setStyleSheet(LABEL_STYLE_SHEET)
+        self.class_name_line_edit.setStyleSheet(LINE_EDIT_STYLE_SHEET)
+        self.start_index_label.setStyleSheet(LABEL_STYLE_SHEET)
+        self.start_index_line_edit.setStyleSheet(LINE_EDIT_STYLE_SHEET)
+        self.end_index_label.setStyleSheet(LABEL_STYLE_SHEET)
+        self.end_index_line_edit.setStyleSheet(LINE_EDIT_STYLE_SHEET)
 
         self.download_path_label.setGeometry(QtCore.QRect(1300, 120, 241, 36))
-        self.download_path_label.setStyleSheet("font-size: 20px;")
-        self.download_path_label.setObjectName("class_name_label_2")
-
-        self.retranslate_view()
-
-    def retranslate_view(self):
-        _translate = QtCore.QCoreApplication.translate
-        self.load_text_button.setText(_translate("self", "Select Path"))
-        self.class_name_label.setText(_translate("self", "Class name:"))
-        self.start_index_label.setText(_translate("self", "Start index:"))
-        self.start_saving_button.setText(_translate("self", "Start"))
-        self.end_index_label.setText(_translate("self", "End index:"))
-        self.download_path_label.setText(_translate("self", "No path has been chosen."))
-
-    def keyPressEvent(self, key_event):
-        super(AddNewSignView, self).keyPressEvent(key_event)
-        self.keyPressed.emit(key_event.key())
-
-    def update_frame(self, image):
-        height, width, channel = image.shape
-        bytes_per_line = 3 * width
-        qImg = QtGui.QImage(image.data, width, height, bytes_per_line, QtGui.QImage.Format_RGB888)
-        new_image = QtGui.QPixmap(qImg)
-        self.pixmap.setPixmap(new_image)
+        self.download_path_label.setStyleSheet(LABEL_STYLE_SHEET)
 
     def choose_folder(self):
-        dialog = QtWidgets.QFileDialog()
+        dialog = QFileDialog()
         folder_path = dialog.getExistingDirectory(None, "Select Folder")
         self.download_path_label.setText(os.path.basename(folder_path))
         return folder_path
