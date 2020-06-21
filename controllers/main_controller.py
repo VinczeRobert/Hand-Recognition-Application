@@ -1,15 +1,18 @@
+from model.frame_captor import FrameCaptor
 from model.settings import Settings
 from view.main_view import MainView
 
 
 class MainController:
     def __init__(self):
-
-        self.main_view = MainView.get_instance()
         self.settings = Settings.get_instance()
-        self.main_view.closed.connect(lambda: self.serialize())
-        self.main_view.show()
 
-    def serialize(self):
+        main_view = MainView.get_instance()
+        main_view.closed.connect(lambda: self.prepare_for_closing())
+        main_view.show()
+
+    def prepare_for_closing(self):
+        FrameCaptor.get_instance().pause_and_restart_camera(False)
+        FrameCaptor.get_instance().close_camera()
         self.settings.serialize()
 

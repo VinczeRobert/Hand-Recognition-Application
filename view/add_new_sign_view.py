@@ -64,6 +64,19 @@ class AddNewSignView(HandGraphicsView):
         self.download_path_label.setGeometry(QtCore.QRect(1300, 120, 240, 35))
         self.download_path_label.setStyleSheet(LABEL_STYLE_SHEET)
 
+    def set_parameters_before_start(self):
+        class_name = 'My_Gesture'
+        start_count = 1
+        end_count = 2000
+        if len(self.class_name_line_edit.text()) != 0:
+            class_name = self.class_name_line_edit.text()
+        if self.start_index_line_edit.text().isdigit():
+            start_count = int(self.start_index_line_edit.text())
+        if self.end_index_line_edit.text().isdigit():
+            end_count = int(self.end_index_line_edit.text())
+
+        return class_name, start_count, end_count
+
     def choose_folder(self):
         dialog = QFileDialog()
         folder_path = dialog.getExistingDirectory(None, "Select Folder")

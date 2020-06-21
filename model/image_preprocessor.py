@@ -62,3 +62,4 @@ class ImagePreprocessor:
 
     def set_background_subtractor(self):
         self.background_subtractor = cv.createBackgroundSubtractorMOG2(0, 50, detectShadows=False)
+

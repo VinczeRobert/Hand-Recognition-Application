@@ -4,6 +4,7 @@ import numpy as np
 from requests.exceptions import ConnectionError, Timeout
 
 class FrameCaptor:
+    _instance = None
 
     def __init__(self, init_url=''):
         """
@@ -15,8 +16,14 @@ class FrameCaptor:
         # self._init_url = 'http://192.168.1.104:8080/shot.jpg'
         self._init_url = '/shot.jpg'
         self._is_android_server = False
-        self._capturing_mode = None
         self._camera = None
+        self._is_running = False
+
+    @staticmethod
+    def get_instance(android_server_url=''):
+        if FrameCaptor._instance is None:
+            FrameCaptor._instance = FrameCaptor(android_server_url)
+        return FrameCaptor._instance
 
     def set_capture_mode(self):
         # if the url is not empty and is valid then the Android camera will be used
@@ -30,10 +37,10 @@ class FrameCaptor:
                 print('Invalid URL or the server is taking too much time. The built-in camera will be used instead')
 
         # if the url is not valid, the PC camera will be used by default
-        self._capturing_mode = 0
         self._camera = cv.VideoCapture(0)
         self._camera.set(10, 200)
         self._camera.set(3, 1280)
+        self._camera.set(cv.CAP_PROP_SETTINGS, 1)
 
     def read_frame(self):
         """
@@ -52,3 +59,17 @@ class FrameCaptor:
 
         frame = cv.flip(frame, 1)
         return frame
+
+    def is_camera_opened(self):
+        if self._camera is not None:
+            return self._camera.isOpened()
+        return False
+
+    def pause_and_restart_camera(self, is_running):
+        self._is_running = is_running
+
+    def is_running(self):
+        return self._is_running
+
+    def close_camera(self):
+        self._camera.release()
