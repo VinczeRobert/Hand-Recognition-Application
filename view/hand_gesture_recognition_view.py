@@ -13,6 +13,7 @@ class HandGestureRecognitionView(HandGraphicsView):
 
         self.load_text_button = QtWidgets.QPushButton("Load text", self)
         self.save_text_button = QtWidgets.QPushButton("Save text", self)
+        self.save_background_button = QtWidgets.QPushButton("Set Background", self)
 
         self.setup_view()
 
@@ -21,6 +22,7 @@ class HandGestureRecognitionView(HandGraphicsView):
 
         self.load_text_button.setGeometry(QtCore.QRect(1340, 50, 150, 60))
         self.save_text_button.setGeometry(QtCore.QRect(1340, 170, 150, 60))
+        self.save_background_button.setGeometry(QtCore.QRect(1340, 290, 150, 60))
 
         self.setStyleSheet(BUTTON_STYLE_SHEET)
 

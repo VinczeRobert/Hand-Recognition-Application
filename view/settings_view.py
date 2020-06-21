@@ -25,14 +25,10 @@ class SettingsView(QtWidgets.QWidget):
 
         self.intermediary_steps_label = QLabel("Show Intermediary Steps", self)
         self.android_server_url_label = QLabel("Android Server URL", self.form_group_box)
-        self.h5_path_label = QLabel("H5 Path", self.form_group_box)
         self.hand_label = QLabel("Choose Hand", self)
         self.image_type_label = QLabel("Choose Image Type", self)
 
         self.android_server_url_line_edit = QLineEdit(self.form_group_box)
-        self.h5_path_line_edit = QLineEdit(self.form_group_box)
-
-        self.vocal_mode_checkbox = QCheckBox("Activate Vocal Mode", self)
 
         self.hand_vertical_box = QGroupBox(self)
         self.image_type_vertical_box = QGroupBox(self)
@@ -67,14 +63,8 @@ class SettingsView(QtWidgets.QWidget):
         self.form_layout.setVerticalSpacing(50)
         self.form_layout.setWidget(0, QFormLayout.LabelRole, self.android_server_url_label)
         self.form_layout.setWidget(0, QFormLayout.FieldRole, self.android_server_url_line_edit)
-        self.form_layout.setWidget(1, QFormLayout.LabelRole, self.h5_path_label)
-        self.form_layout.setWidget(1, QFormLayout.FieldRole, self.h5_path_line_edit)
 
         self.android_server_url_line_edit.setStyleSheet(LINE_EDIT_STYLE_SHEET)
-        self.h5_path_line_edit.setStyleSheet(LINE_EDIT_STYLE_SHEET)
-
-        self.vocal_mode_checkbox.setGeometry(QtCore.QRect(480, 130, 241, 71))
-        self.vocal_mode_checkbox.setStyleSheet("font-size: 20px;")
 
         self.hand_vertical_box.setGeometry(QtCore.QRect(150, 140, 150, 150))
         self.hand_vertical_box.setStyleSheet(GROUP_BOX_STYLE_SHEET)
@@ -111,8 +101,4 @@ class SettingsView(QtWidgets.QWidget):
         else:
             self.rgb_images_radio_button.setChecked(True)
 
-        if data['vocal_mode']:
-            self.vocal_mode_checkbox.setChecked(True)
-
         self.android_server_url_line_edit.setText(data['android_server_url'])
-        self.h5_path_line_edit.setText(data['h5_path'])

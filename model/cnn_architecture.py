@@ -2,14 +2,13 @@ from keras import models, layers, losses, regularizers, callbacks
 import numpy as np
 from sklearn import metrics
 
-from base_constants.constants import CLASSES
-
 
 class CNNArchitecture:
 
+    MODEL_PATH = 'data/cnn/hra_model'
     _instance = None
 
-    # Declaring model hyper (non-trainable) parameters for training
+    # Declaring hra_model hyper (non-trainable) parameters for training
     INPUT_SHAPE = (64, 64, 3)
     DROPOUT_RATE = 0.5
     DENSE_UNITS = 512
@@ -36,9 +35,9 @@ class CNNArchitecture:
             CNNArchitecture._instance = CNNArchitecture()
         return CNNArchitecture._instance
 
-    def build_model(self):
+    def build_model(self, classes=29):
         """
-        Method used to build the model what will be used for training.
+        Method used to build the hra_model what will be used for training.
         """
         self.model.add(layers.Conv2D(filters=32, kernel_size=2,
                                      strides=(1, 1), padding="same", activation=self.ACTIVATION_FUNCTION,
@@ -66,7 +65,7 @@ class CNNArchitecture:
 
         self.model.add(
             layers.Dense(self.DENSE_UNITS, activation=self.ACTIVATION_FUNCTION, kernel_regularizer=self.KERNEL_REGULARIZER))
-        self.model.add(layers.Dense(len(CLASSES), activation=self.SECOND_ACTIVATION_FUNCTION))
+        self.model.add(layers.Dense(classes, activation=self.SECOND_ACTIVATION_FUNCTION))
 
         print(self.model.summary())
 
@@ -76,8 +75,8 @@ class CNNArchitecture:
 
     def train_model(self, train_images, class_labels):
         """
-        Method used to train the built model.
-        :param train_images: images that the model will be trained on
+        Method used to train the built hra_model.
+        :param train_images: images that the hra_model will be trained on
         :param class_labels: classes that the training images belong to
         """
         save_weights_callback = self.use_callback_for_saving_model()
@@ -85,13 +84,12 @@ class CNNArchitecture:
         self.history = self.model.fit(train_images, class_labels, epochs=self.EPOCHS, batch_size=self.BATCH_SIZE, shuffle=True,
                                       validation_split=self.VALIDATION_SPLIT, callbacks=[save_weights_callback, early_stopping_callback])
 
-        print("Model has been created.")
-        self.model.summary()
+        self.model.save(self.MODEL_PATH)
 
     def evaluate_model(self, test_images, class_labels):
         """
-        Method used to test the built model.
-        :param test_images: images that the model will be evaluated on
+        Method used to test the built hra_model.
+        :param test_images: images that the hra_model will be evaluated on
         :param class_labels: classes that the testing images belong to
         """
         evaluate_metrics = self.model.evaluate(test_images, class_labels)
@@ -104,7 +102,7 @@ class CNNArchitecture:
     @staticmethod
     def use_callback_for_saving_model():
         """
-        Create a Callback that saves the model's weights.
+        Create a Callback that saves the hra_model's weights.
         """
         save_weights_callback = callbacks.ModelCheckpoint(filepath='data/weights/new_weights.ckpt', save_weights_only=True, verbose=1)
         return save_weights_callback
@@ -112,7 +110,7 @@ class CNNArchitecture:
     @staticmethod
     def use_callback_for_early_stopping():
       """
-      Create a Callback that stops the model earlier if no improvements are made.
+      Create a Callback that stops the hra_model earlier if no improvements are made.
       We use this as an attempt to block potential overfitting.
       """
       early_stopping_callback = callbacks.EarlyStopping(monitor='val_accuracy', min_delta=0.001, patience=1)
@@ -135,7 +133,7 @@ class CNNArchitecture:
     @staticmethod
     def compute_confusion_matrix(true_labels, predicted_labels):
       """
-      Computes the confusion matrix of the model based on testing data.
+      Computes the confusion matrix of the hra_model based on testing data.
       :param true_labels: classes that the testing images actually belong to
       :param predicted_labels: classes that where predicted for each testing image
       """

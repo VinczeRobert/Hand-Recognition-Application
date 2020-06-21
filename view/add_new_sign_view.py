@@ -13,6 +13,7 @@ class AddNewSignView(HandGraphicsView):
 
         self.load_text_button = QPushButton("Select Path", self)
         self.start_saving_button = QPushButton("Start", self)
+        self.save_background_button = QPushButton("Set Background", self)
 
         self.form_group_box = QGroupBox(self)
         self.form_layout = QFormLayout(self.form_group_box)
@@ -36,7 +37,10 @@ class AddNewSignView(HandGraphicsView):
         self.start_saving_button.setGeometry(QtCore.QRect(1300, 400, 150, 60))
         self.start_saving_button.setStyleSheet(BUTTON_STYLE_SHEET)
 
-        self.form_group_box.setGeometry(QtCore.QRect(1300, 230, 311, 161))
+        self.save_background_button.setGeometry(QtCore.QRect(1300, 500, 150, 60))
+        self.save_background_button.setStyleSheet(BUTTON_STYLE_SHEET)
+
+        self.form_group_box.setGeometry(QtCore.QRect(1300, 230, 310, 160))
         self.form_group_box.setStyleSheet("border: none;")
 
         self.form_layout.setLabelAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
@@ -57,7 +61,7 @@ class AddNewSignView(HandGraphicsView):
         self.end_index_label.setStyleSheet(LABEL_STYLE_SHEET)
         self.end_index_line_edit.setStyleSheet(LINE_EDIT_STYLE_SHEET)
 
-        self.download_path_label.setGeometry(QtCore.QRect(1300, 120, 241, 36))
+        self.download_path_label.setGeometry(QtCore.QRect(1300, 120, 240, 35))
         self.download_path_label.setStyleSheet(LABEL_STYLE_SHEET)
 
     def choose_folder(self):

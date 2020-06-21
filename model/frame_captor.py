@@ -12,7 +12,8 @@ class FrameCaptor:
         :param url: url to Android IPWebcam server; if it is a valid one, the application will use the Android phone's camera
         :param hand: 0 for right hand, 1 for left hand
         """
-        self._init_url = init_url + '/shot.jpg'
+        # self._init_url = 'http://192.168.1.104:8080/shot.jpg'
+        self._init_url = '/shot.jpg'
         self._is_android_server = False
         self._capturing_mode = None
         self._camera = None

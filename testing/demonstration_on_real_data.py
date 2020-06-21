@@ -34,7 +34,7 @@ if __name__ == '__main__':
         except ImageNotLoadedException as e:
             print(e.get_exception_message())
 
-    # Creating the model, loading the weights and getting the predictions
+    # Creating the hra_model, loading the weights and getting the predictions
     cnn_architecture = CNNArchitecture()
     cnn_architecture.build_model()
     cnn_architecture.model.load_weights('../data/weights/weights_left.ckpt')

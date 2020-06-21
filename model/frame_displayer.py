@@ -1,5 +1,5 @@
-from base_constants.constants import HAND
 import cv2 as cv
+from model.settings import HAND
 
 
 class FrameDisplayer:
