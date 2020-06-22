@@ -47,17 +47,18 @@ class AddNewSignController:
             if self.upload_path is None:
                 self.upload_path = self.add_new_sign_view.choose_folder()
 
-            self.preview_for_param_preparing(self.settings.image_type)
+            self.preview_for_param_preparing(self.settings.image_type, self.settings.intermediary_steps)
         else:
             cv.destroyAllWindows()
+            self.image_preprocessor.background_subtractor = None
             self.frame_captor.pause_and_restart_camera(False)
 
-    def preview_for_param_preparing(self, image_type):
+    def preview_for_param_preparing(self, image_type, intermediary_steps):
         while self.frame_captor.is_running():
             image = self.frame_captor.read_frame()
 
             if self.image_preprocessor.background_subtractor is not None:
-                image, _ = self.image_preprocessor.prepare_image_for_classification(image, image_type)
+                _, _ = self.image_preprocessor.prepare_image_for_classification(image, image_type, intermediary_steps)
 
             if self.start_saving:
                 cv.destroyAllWindows()
@@ -69,9 +70,9 @@ class AddNewSignController:
             cv.waitKey(10)
 
         class_name, start_count, end_count = self.add_new_sign_view.set_parameters_before_start()
-        self.create_data_for_class(self.upload_path, class_name, start_count, end_count, image_type)
+        self.create_data_for_class(self.upload_path, class_name, start_count, end_count, image_type, intermediary_steps)
 
-    def create_data_for_class(self, path_to_folder, class_name, start_count, end_count, image_type):
+    def create_data_for_class(self, path_to_folder, class_name, start_count, end_count, image_type, intermediary_steps):
 
         image_path = os.path.join(path_to_folder, class_name)
 
@@ -81,7 +82,8 @@ class AddNewSignController:
         while self.frame_captor.is_running():
             image = self.frame_captor.read_frame()
 
-            preprocessed_image, status = self.image_preprocessor.prepare_image_for_classification(image, image_type)
+            preprocessed_image, status = self.image_preprocessor.prepare_image_for_classification(
+                image, image_type, intermediary_steps)
 
             save_path = os.path.join(image_path, class_name + '_{}.jpg'.format(start_count))
 

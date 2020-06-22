@@ -1,4 +1,5 @@
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore
+from PyQt5.QtWidgets import QPushButton, QCheckBox
 from view.hand_graphics_view import HandGraphicsView
 from view.style_sheets.main_view_stylesheet import BUTTON_STYLE_SHEET
 
@@ -11,9 +12,11 @@ class HandGestureRecognitionView(HandGraphicsView):
     def __init__(self):
         super(HandGestureRecognitionView, self).__init__()
 
-        self.load_text_button = QtWidgets.QPushButton("Load text", self)
-        self.save_text_button = QtWidgets.QPushButton("Save text", self)
-        self.save_background_button = QtWidgets.QPushButton("Set Background", self)
+        self.load_text_button = QPushButton("Load text", self)
+        self.save_text_button = QPushButton("Save text", self)
+        self.save_background_button = QPushButton("Set Background", self)
+
+        self.vocal_mode_checkbox = QCheckBox('Vocal Mode', self)
 
         self.setup_view()
 
@@ -24,8 +27,7 @@ class HandGestureRecognitionView(HandGraphicsView):
         self.save_text_button.setGeometry(QtCore.QRect(1340, 170, 150, 60))
         self.save_background_button.setGeometry(QtCore.QRect(1340, 290, 150, 60))
 
+        self.vocal_mode_checkbox.setGeometry(QtCore.QRect(1350, 410, 150, 70))
+        self.vocal_mode_checkbox.setStyleSheet("font-size: 20px;")
+
         self.setStyleSheet(BUTTON_STYLE_SHEET)
-
-
-
-

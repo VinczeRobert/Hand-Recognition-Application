@@ -26,6 +26,7 @@ class HandGestureRecognitionController:
         self.hand_gesture_recognition_view.save_background_button.clicked.connect(
             lambda: self.image_preprocessor.set_background_subtractor()
         )
+
         self.hand_gesture_recognition_view.keyPressed.connect(self.button_events)
 
     def start_video(self, widget_class):
@@ -36,23 +37,27 @@ class HandGestureRecognitionController:
             self.frame_displayer.hand_index = self.settings.hand
             self.image_preprocessor.hand_index = self.settings.hand
 
-            self.run_hand_prediction(self.settings.image_type)
+            self.run_hand_prediction(self.settings.image_type, self.settings.intermediary_steps)
+
         else:
             cv.destroyAllWindows()
+            self.image_preprocessor.background_subtractor = None
             self.frame_captor.pause_and_restart_camera(False)
 
-    def run_hand_prediction(self, image_type):
+    def run_hand_prediction(self, image_type, intermediary_steps):
         new_predicted_letter = None
 
         while self.frame_captor.is_running():
             image = self.frame_captor.read_frame()
 
             if self.image_preprocessor.background_subtractor is not None:
-                preprocessed_image, status = self.image_preprocessor.prepare_image_for_classification(image, image_type)
+                preprocessed_image, status = self.image_preprocessor.prepare_image_for_classification(
+                    image, image_type, intermediary_steps)
                 if status == -1:
                     new_predicted_letter = -1
                 else:
-                    new_predicted_letter = self.predictor.predict_hand_gesture(preprocessed_image, False)
+                    new_predicted_letter = self.predictor.predict_hand_gesture(preprocessed_image,
+                                                self.hand_gesture_recognition_view.vocal_mode_checkbox.isChecked())
                     self.frame_displayer.get_predicted_text(new_predicted_letter)
 
             image = self.frame_displayer.display_frame(image, new_predicted_letter)

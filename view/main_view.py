@@ -72,6 +72,7 @@ class MainView(QMainWindow):
     def setup_view(self):
         self.resize(1600, 900)
         self.setWindowTitle("Hand Recognition Application")
+        self.setWindowIcon(QIcon("data/icons/hand_icon"))
 
         self.size_policy.setHorizontalStretch(50)
         self.size_policy.setVerticalStretch(0)

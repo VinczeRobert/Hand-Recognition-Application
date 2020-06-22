@@ -15,9 +15,8 @@ class Settings:
         self.android_server_url = ''
         self.intermediary_steps = {
             "Filtered Image": False,
-            "Grayscale Image": False,
-            "Binary Image": False,
-            "Extracted Hand Image": False,
+            "Background Difference Image": False,
+            "Extracted Binary Hand Image": False,
             "Opened Hand Image": False,
             "Contoured Image": False,
             "Final Image": False
@@ -37,6 +36,7 @@ class Settings:
             self.image_type = IMAGE_TYPE[1]
         else:
             self.image_type = IMAGE_TYPE[0]
+        return Settings._instance
 
     def switch_hand(self):
         if self.hand == HAND[0]:
