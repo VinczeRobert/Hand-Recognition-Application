@@ -5,8 +5,8 @@ from model.settings import HAND, IMAGE_TYPE
 
 class ImagePreprocessor:
     def __init__(self, hand_index=0):
-        self.background_subtractor = None
-        self.hand_index = hand_index
+        self._background_subtractor = None
+        self._hand_index = hand_index
 
     def prepare_image_for_classification(self, image, image_type, intermediary_steps):
         # STEP 1: Remove noise
@@ -14,11 +14,11 @@ class ImagePreprocessor:
         self.show_intermediary_step(filtered_image, intermediary_steps, 'Filtered Image')
 
         # STEP 2: Get the difference between current frame and background
-        background_mask = self.background_subtractor.apply(filtered_image, learningRate=0)
+        background_mask = self._background_subtractor.apply(filtered_image, learningRate=0)
         self.show_intermediary_step(background_mask, intermediary_steps, 'Background Difference Image')
 
         # STEP 3: Extract only the hand part from the difference
-        if self.hand_index == HAND[0]:
+        if self._hand_index == HAND[0]:
             binary_mask = background_mask[0:480, 800:1280]
             extracted_image = image[0:480, 800:1280]
         else:
@@ -66,7 +66,16 @@ class ImagePreprocessor:
             return extracted_hand, 0
 
     def set_background_subtractor(self):
-        self.background_subtractor = cv.createBackgroundSubtractorMOG2(0, 50, detectShadows=False)
+        self._background_subtractor = cv.createBackgroundSubtractorMOG2(0, 50, detectShadows=False)
+
+    def reset_background_subtractor(self):
+        self._background_subtractor = None
+
+    def  get_background_subtractor(self):
+        return self._background_subtractor
+
+    def set_hand_index(self, hand_index):
+        self._hand_index = hand_index
 
     @staticmethod
     def show_intermediary_step(image, intermediary_steps, step):

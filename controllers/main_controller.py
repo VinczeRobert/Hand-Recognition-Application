@@ -1,6 +1,7 @@
 from model.frame_captor import FrameCaptor
 from model.settings import Settings
 from view.main_view import MainView
+import tensorflow as tf
 
 
 class MainController:

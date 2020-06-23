@@ -10,12 +10,12 @@ from view.main_view import MainView
 class HandGestureRecognitionController:
     def __init__(self):
         self.settings = Settings.get_instance()
-        self.frame_captor = FrameCaptor.get_instance(self.settings.android_server_url)
+        self.frame_captor = FrameCaptor.get_instance(self.settings.get_android_server_url())
         self.frame_captor.set_capture_mode()
-        self.frame_displayer = FrameDisplayer(self.settings.hand)
-        self.image_preprocessor = ImagePreprocessor(self.settings.hand)
+        self.frame_displayer = FrameDisplayer(self.settings.get_hand())
+        self.image_preprocessor = ImagePreprocessor(self.settings.get_hand())
 
-        self.predictor = Predictor('data/weights/weights_binary_left.ckpt', self.settings.classes)
+        self.predictor = Predictor('data/weights/weights_binary_left.ckpt', self.settings.get_classes())
 
         main_view = MainView.get_instance()
         self.hand_gesture_recognition_view = main_view.hand_gesture_recognition_view
@@ -34,14 +34,14 @@ class HandGestureRecognitionController:
         self.frame_captor.pause_and_restart_camera(True)
 
         if isinstance(self.hand_gesture_recognition_view, widget_class):
-            self.frame_displayer.hand_index = self.settings.hand
-            self.image_preprocessor.hand_index = self.settings.hand
+            self.frame_displayer.set_hand_index(self.settings.get_hand())
+            self.image_preprocessor.set_hand_index(self.settings.get_hand())
 
-            self.run_hand_prediction(self.settings.image_type, self.settings.intermediary_steps)
+            self.run_hand_prediction(self.settings.get_image_type(), self.settings.get_intermediary_steps())
 
         else:
             cv.destroyAllWindows()
-            self.image_preprocessor.background_subtractor = None
+            self.image_preprocessor.reset_background_subtractor()
             self.frame_captor.pause_and_restart_camera(False)
 
     def run_hand_prediction(self, image_type, intermediary_steps):
@@ -50,7 +50,7 @@ class HandGestureRecognitionController:
         while self.frame_captor.is_running():
             image = self.frame_captor.read_frame()
 
-            if self.image_preprocessor.background_subtractor is not None:
+            if self.image_preprocessor.get_background_subtractor() is not None:
                 preprocessed_image, status = self.image_preprocessor.prepare_image_for_classification(
                     image, image_type, intermediary_steps)
                 if status == -1:

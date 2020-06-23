@@ -87,20 +87,20 @@ class SettingsView(QtWidgets.QWidget):
         self.intermediary_steps_label.setStyleSheet(LABEL_STYLE_SHEET)
 
     def set_view_options(self, data):
-        if data['hand'] == HAND[1]:
+        if data['_hand'] == HAND[1]:
             self.left_hand_radio_button.setChecked(True)
         else:
             self.right_hand_radio_button.setChecked(True)
 
-        if data['image_type'] == IMAGE_TYPE[1]:
+        if data['_image_type'] == IMAGE_TYPE[1]:
             self.binary_image_radio_button.setChecked(True)
         else:
             self.rgb_image_radio_button.setChecked(True)
 
-        self.android_server_url_line_edit.setText(data['android_server_url'])
+        self.android_server_url_line_edit.setText(data['_android_server_url'])
 
         for checkbox in self.vertical_group_box.children()[1:]:
-            if data['intermediary_steps'][checkbox.text()]:
+            if data['_intermediary_steps'][checkbox.text()]:
                 checkbox.setChecked(True)
             else:
                 checkbox.setChecked(False)

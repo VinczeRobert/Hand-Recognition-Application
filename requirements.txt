@@ -1,0 +1,6 @@
+numpy
+keras
+opencv-python
+pyqt5
+sklearn
+pyttsx3

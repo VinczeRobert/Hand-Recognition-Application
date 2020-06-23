@@ -12,13 +12,9 @@ class SettingsController:
         self.settings_view.rgb_image_radio_button.toggled.connect(self.settings.switch_image_type)
         self.settings_view.left_hand_radio_button.toggled.connect(self.settings.switch_hand)
 
-        self.settings_view.android_server_url_line_edit.textChanged.connect(lambda: self.settings.set_android_server_url(
-            self.settings_view.android_server_url_line_edit.text()
-        ))
+        self.settings_view.android_server_url_line_edit.textChanged.connect(
+            lambda: self.settings.set_android_server_url(self.settings_view.android_server_url_line_edit.text()))
 
         for checkbox in self.settings_view.vertical_group_box.children()[1:]:
             checkbox.stateChanged.connect(
                 lambda state, checkbox=checkbox: self.settings.set_intermediary_step(checkbox))
-
-
-

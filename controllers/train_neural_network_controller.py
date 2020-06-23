@@ -9,8 +9,6 @@ class TrainNeuralNetworkController:
         self.settings = Settings.get_instance()
         self.training_data_reader = TrainingDataReader()
         self.cnn_architecture = CNNArchitecture.get_instance()
-
-        self.h5_file = None
         self.dataset_folder = None
 
         main_view = MainView.get_instance()
@@ -23,8 +21,8 @@ class TrainNeuralNetworkController:
         self.dataset_folder = self.train_neural_network_view.choose_dataset_folder()
 
     def train_network(self):
-        self.training_data_reader.read_training_data(self.dataset_folder, h5_path=self.h5_file)
-        self.cnn_architecture.train_model(self.training_data_reader.training_data,
-                                          self.training_data_reader.training_class_labels)
+        self.training_data_reader.read_training_data(self.dataset_folder)
+        self.cnn_architecture.train_model(self.training_data_reader.get_training_data(),
+                                          self.training_data_reader.get_training_class_labels())
 
 

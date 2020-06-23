@@ -4,15 +4,15 @@ from model.settings import HAND
 
 class FrameDisplayer:
     def __init__(self, hand_index=0):
-        self.hand_index = hand_index
-        self.last_predicted_letter = None
-        self.iterations_between_different_predictions = 0
-        self.current_predicted_text = ''
+        self._hand_index = hand_index
+        self._last_predicted_letter = None
+        self._iterations_between_different_predictions = 0
+        self._current_predicted_text = ''
 
     def display_frame(self, frame, predicted_letter):
         # If the user wants to use his/her left hand, the rectangle representing the area of interest will
         # be shown on the upper-left corner
-        if self.hand_index == HAND[0]:
+        if self._hand_index == HAND[0]:
             cv.rectangle(frame, (800, 0), (1280, 480), (0, 255, 0), 2)
         else:
             # otherwise on the upper-right corner
@@ -40,11 +40,11 @@ class FrameDisplayer:
                        1, (0, 0, 255), 2, cv.LINE_AA)
 
         # Display text
-        text_size = cv.getTextSize(self.current_predicted_text, cv.FONT_HERSHEY_SIMPLEX, 1,cv.LINE_AA)[0]
+        text_size = cv.getTextSize(self._current_predicted_text, cv.FONT_HERSHEY_SIMPLEX, 1,cv.LINE_AA)[0]
         line_height = text_size[1] + 5
         y0 = 520
         no_displayable_lines = int((720 - 500) / line_height)
-        split_text = self.current_predicted_text.split("\n")
+        split_text = self._current_predicted_text.split("\n")
         no_all_lines = len(split_text)
 
         if no_all_lines > no_displayable_lines:
@@ -57,23 +57,26 @@ class FrameDisplayer:
         return cv.cvtColor(frame, cv.COLOR_BGR2RGB)
 
     def get_predicted_text(self, new_predicted_letter):
-        if new_predicted_letter != self.last_predicted_letter:
-            self.last_predicted_letter = new_predicted_letter
+        if new_predicted_letter != self._last_predicted_letter:
+            self._last_predicted_letter = new_predicted_letter
         else:
-            self.iterations_between_different_predictions = self.iterations_between_different_predictions + 1
+            self._iterations_between_different_predictions = self._iterations_between_different_predictions + 1
 
-        if self.iterations_between_different_predictions > 40:
-            self.iterations_between_different_predictions = 0
+        if self._iterations_between_different_predictions > 40:
+            self._iterations_between_different_predictions = 0
 
             #TODO: This is wonderful with one small issue: there is no way for the user to know when a space or newline was actually succesfull
             if new_predicted_letter == 'Delete':
-                self.current_predicted_text = self.current_predicted_text[:-1]
+                self._current_predicted_text = self._current_predicted_text[:-1]
             elif new_predicted_letter == 'Space':
-                self.current_predicted_text = self.current_predicted_text + ' '
+                self._current_predicted_text = self._current_predicted_text + ' '
             elif new_predicted_letter == 'NewLine':
-                self.current_predicted_text = self.current_predicted_text + '\n'
+                self._current_predicted_text = self._current_predicted_text + '\n'
             else:
-                self.current_predicted_text = self.current_predicted_text + new_predicted_letter
+                self._current_predicted_text = self._current_predicted_text + new_predicted_letter
+
+    def set_hand_index(self, hand_index):
+        self._hand_index = hand_index
 
 
 
