@@ -1,6 +1,8 @@
 import os
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QPushButton, QGroupBox, QFormLayout, QLabel, QLineEdit, QFileDialog
+from PyQt5.QtWidgets import QPushButton, QGroupBox, QFormLayout, QLabel, QLineEdit
+
+from view.dialogs import choose_folder
 from view.hand_graphics_view import HandGraphicsView
 from view.style_sheets.main_view_stylesheet import BUTTON_STYLE_SHEET, LINE_EDIT_STYLE_SHEET, LABEL_STYLE_SHEET
 
@@ -18,11 +20,11 @@ class AddNewSignView(HandGraphicsView):
         self.form_group_box = QGroupBox(self)
         self.form_layout = QFormLayout(self.form_group_box)
 
-        self.class_name_label = QLabel("Class name:", self.form_group_box)
+        self.class_name_label = QLabel("Class name *:", self.form_group_box)
         self.class_name_line_edit = QLineEdit(self.form_group_box)
-        self.start_index_label = QLabel("Start index: ", self.form_group_box)
+        self.start_index_label = QLabel("Start index *: ", self.form_group_box)
         self.start_index_line_edit = QLineEdit(self.form_group_box)
-        self.end_index_label = QLabel("End index: ",self.form_group_box)
+        self.end_index_label = QLabel("End index *: ",self.form_group_box)
         self.end_index_line_edit = QLineEdit(self.form_group_box)
 
         self.download_path_label = QLabel("No path has been chosen", self)
@@ -77,8 +79,9 @@ class AddNewSignView(HandGraphicsView):
 
         return class_name, start_count, end_count
 
-    def choose_folder(self):
-        dialog = QFileDialog()
-        folder_path = dialog.getExistingDirectory(None, "Select Folder")
-        self.download_path_label.setText(os.path.basename(folder_path))
-        return folder_path
+    def choose_new_gesture_folder(self):
+        folder_path = choose_folder('Select Folder For Creating New Gesture')
+        if folder_path != '':
+            self.download_path_label.setText(os.path.basename(folder_path))
+            return folder_path
+        return None

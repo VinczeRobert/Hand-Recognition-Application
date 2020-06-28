@@ -1,10 +1,12 @@
 import os
 import cv2 as cv
+from controller.validation import validate_add_new_sign
 from model.frame_captor import FrameCaptor
 from model.frame_displayer import FrameDisplayer
 from model.image_preprocessor import ImagePreprocessor
 from model.settings import Settings
 from view.main_view import MainView
+from view.dialogs import show_error_message
 
 
 class AddNewSignController:
@@ -30,11 +32,18 @@ class AddNewSignController:
         self.add_new_sign_view.keyPressed.connect(self.button_events)
 
     def _set_download_folder(self):
-        self.upload_path = self.add_new_sign_view.choose_folder()
+        self._upload_path = self.add_new_sign_view.choose_new_gesture_folder()
 
     def _set_start(self):
         if self.image_preprocessor.get_background_subtractor() is not None:
-            self._start_saving = True
+
+            if (validate_add_new_sign(self._upload_path, self.add_new_sign_view.class_name_line_edit.text(),
+                                      self.add_new_sign_view.start_index_line_edit.text(),
+                                      self.add_new_sign_view.end_index_line_edit.text(),
+                                      self.settings.get_image_type())):
+                self._start_saving = True
+        else:
+            show_error_message('Please save the background before starting!')
 
     def start_video(self, widget_class):
         self.add_new_sign_view.graphics_view.setFocus()
@@ -45,7 +54,7 @@ class AddNewSignController:
             self.image_preprocessor.set_hand_index(self.settings.get_hand())
 
             if self._upload_path is None:
-                self._upload_path = self.add_new_sign_view.choose_folder()
+                self._set_download_folder()
 
             self.preview_for_param_preparing(self.settings.get_image_type(), self.settings.get_intermediary_steps())
         else:
@@ -64,13 +73,14 @@ class AddNewSignController:
                 cv.destroyAllWindows()
                 break
             else:
-                image = self.frame_displayer.display_frame(image, 0)
+                image = self.frame_displayer.display_frame_in_building_mode(image, 0)
                 self.add_new_sign_view.update_frame(image)
 
             cv.waitKey(10)
 
         class_name, start_count, end_count = self.add_new_sign_view.set_parameters_before_start()
-        self.create_data_for_class(self._upload_path, class_name, start_count, end_count, image_type, intermediary_steps)
+        self.create_data_for_class(self._upload_path, class_name, start_count, end_count, image_type,
+                                   intermediary_steps)
 
     def create_data_for_class(self, path_to_folder, class_name, start_count, end_count, image_type, intermediary_steps):
 
@@ -87,7 +97,7 @@ class AddNewSignController:
 
             save_path = os.path.join(image_path, class_name + '_{}.jpg'.format(start_count))
 
-            image = self.frame_displayer.display_frame(image, start_count)
+            image = self.frame_displayer.display_frame_in_building_mode(image, start_count)
             self.add_new_sign_view.update_frame(image)
 
             if status != -1:

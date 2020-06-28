@@ -20,7 +20,7 @@ class FrameCaptor:
         self._is_running = False
 
     @staticmethod
-    def get_instance(android_server_url=None):
+    def get_instance(android_server_url=''):
         if FrameCaptor._instance is None:
             FrameCaptor._instance = FrameCaptor(android_server_url)
         return FrameCaptor._instance

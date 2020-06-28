@@ -1,10 +1,10 @@
 import sys
 from PyQt5.QtWidgets import QApplication
-from controllers.add_new_sign_controller import AddNewSignController
-from controllers.hand_gesture_prediction_controller import HandGestureRecognitionController
-from controllers.main_controller import MainController
-from controllers.settings_controller import SettingsController
-from controllers.train_neural_network_controller import TrainNeuralNetworkController
+from controller.add_new_sign_controller import AddNewSignController
+from controller.hand_gesture_prediction_controller import HandGestureRecognitionController
+from controller.main_controller import MainController
+from controller.settings_controller import SettingsController
+from controller.train_neural_network_controller import TrainNeuralNetworkController
 
 
 def except_hook(cls, exception, traceback):

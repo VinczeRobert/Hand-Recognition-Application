@@ -1,6 +1,6 @@
 numpy
-keras
+keras==2.2.4
 opencv-python
 pyqt5
 sklearn
-pyttsx3
+pyttsx3==2.6

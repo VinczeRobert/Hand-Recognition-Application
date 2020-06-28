@@ -103,3 +103,6 @@ class CNNArchitecture:
             max_predictions.append(np.argmax(predictions[idx]))
 
         return max_predictions
+
+    def compute_confidence_scores_for_images(self, images):
+        return self._model.predict(images)

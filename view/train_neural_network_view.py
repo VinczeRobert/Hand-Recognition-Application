@@ -1,5 +1,7 @@
 import os
 from PyQt5 import QtCore, QtWidgets
+
+from view.dialogs import choose_folder
 from view.style_sheets.main_view_stylesheet import BUTTON_STYLE_SHEET, LABEL_STYLE_SHEET
 
 
@@ -44,8 +46,7 @@ class TrainNeuralNetworkView(QtWidgets.QWidget):
         self.status_message_label.setText("")
 
     def choose_dataset_folder(self):
-        dialog = QtWidgets.QFileDialog()
-        folder_path = dialog.getExistingDirectory(None, 'Select Dataset Folder')
+        folder_path = choose_folder('Select Dataset Folder')
         if folder_path is not None:
             self.load_dataset_label.setText(os.path.basename(folder_path))
         return folder_path

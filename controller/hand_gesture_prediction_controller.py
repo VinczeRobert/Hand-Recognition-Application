@@ -14,8 +14,9 @@ class HandGestureRecognitionController:
         self.frame_captor.set_capture_mode()
         self.frame_displayer = FrameDisplayer(self.settings.get_hand())
         self.image_preprocessor = ImagePreprocessor(self.settings.get_hand())
+        self.currently_predicted_text = ''
 
-        self.predictor = Predictor('data/weights/weights_binary_left.ckpt', self.settings.get_classes())
+        self.predictor = Predictor('data/weights/weights_left_binary.ckpt', self.settings.get_classes())
 
         main_view = MainView.get_instance()
         self.hand_gesture_recognition_view = main_view.hand_gesture_recognition_view
@@ -27,7 +28,18 @@ class HandGestureRecognitionController:
             lambda: self.image_preprocessor.set_background_subtractor()
         )
 
+        self.hand_gesture_recognition_view.load_text_button.clicked.connect(lambda: self.load_text())
+        self.hand_gesture_recognition_view.save_text_button.clicked.connect(lambda: self.save_text())
+
         self.hand_gesture_recognition_view.keyPressed.connect(self.button_events)
+
+    def load_text(self):
+        text_file_path = self.hand_gesture_recognition_view.choose_text_file_to_load()
+        self.currently_predicted_text = self.frame_displayer.load_text(text_file_path)
+
+    def save_text(self):
+        text_file_path = self.hand_gesture_recognition_view.choose_text_file_to_save()
+        self.frame_displayer.save_text(text_file_path)
 
     def start_video(self, widget_class):
         self.hand_gesture_recognition_view.graphics_view.setFocus()
@@ -56,11 +68,12 @@ class HandGestureRecognitionController:
                 if status == -1:
                     new_predicted_letter = -1
                 else:
-                    new_predicted_letter = self.predictor.predict_hand_gesture(preprocessed_image,
-                                                self.hand_gesture_recognition_view.vocal_mode_checkbox.isChecked())
-                    self.frame_displayer.get_predicted_text(new_predicted_letter)
+                    new_predicted_letter = self.predictor.predict_hand_gesture(
+                        preprocessed_image, self.hand_gesture_recognition_view.vocal_mode_checkbox.isChecked())
+                    self.currently_predicted_text = \
+                        self.frame_displayer.get_predicted_text(new_predicted_letter, self.currently_predicted_text)
 
-            image = self.frame_displayer.display_frame(image, new_predicted_letter)
+            image = self.frame_displayer.display_frame(image, new_predicted_letter, self.currently_predicted_text)
             self.hand_gesture_recognition_view.update_frame(image)
 
             cv.waitKey(10)
