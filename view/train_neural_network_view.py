@@ -1,25 +1,15 @@
 import os
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QPlainTextEdit
-
 from view.dialogs import choose_folder
 from view.style_sheets.main_view_stylesheet import BUTTON_STYLE_SHEET, LABEL_STYLE_SHEET
 
 
 # noinspection PyArgumentList
-class ScrollMessageBox(QtWidgets.QMessageBox):
-    def __init__(self):
-        QtWidgets.QMessageBox.__init__(self)
-        scroll = QtWidgets.QScrollArea(self)
-        scroll.setWidgetResizable(True)
-        self.content = QtWidgets.QWidget()
-        scroll.setWidget(self.content)
-        self.vertical_layout = QtWidgets.QVBoxLayout(self.content)
-        self.layout().addWidget(scroll, 0, 0, 1, self.layout().columnCount())
-
-
-# noinspection PyArgumentList
 class TrainNeuralNetworkView(QtWidgets.QWidget):
+    """
+    View class used for displaying the Train Neural Network submenu
+    """
 
     def __init__(self, parent=None):
         super(TrainNeuralNetworkView, self).__init__(parent)
@@ -53,7 +43,6 @@ class TrainNeuralNetworkView(QtWidgets.QWidget):
             self.load_dataset_label.setText(os.path.basename(folder_path))
             return folder_path
         return None
-
 
     def appendText(self, message):
         self.message_plain_text.appendPlainText(message)

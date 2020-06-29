@@ -1,22 +1,27 @@
 import os
-
 from PyQt5 import QtCore
 from PyQt5.QtCore import QUrl
-from PyQt5.QtGui import QPixmap, QIcon, QPainter, QPen
+from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QGroupBox, QHBoxLayout, QScrollArea, QVBoxLayout, QSlider, \
-    QStyle, QMainWindow
-
+    QStyle, QComboBox
 from view.style_sheets.main_view_stylesheet import FIRST_LETTER_LABEL_STYLE_SHEET, REST_LETTERS_LABEL_STYLE_SHEET, \
-    BUTTON_STYLE_SHEET
+    BUTTON_STYLE_SHEET, BACKGROUND_COLOR
 
 
 # noinspection PyArgumentList
 class HomeView(QWidget):
+    """
+    View class containg the title of the application and options for viewing the gestures of each letter of the
+    american sign language and for viewing some demonstrating videos of the application.
+    This View is what the user first sees when the application is launched.
+    """
 
-    def __init__(self, parent=None):
+    def __init__(self, icon, parent=None):
         super(HomeView, self).__init__(parent)
+
+        self.icon = icon
 
         self.h_picture = QLabel(self)
         self.r_picture = QLabel(self)
@@ -38,21 +43,20 @@ class HomeView(QWidget):
         self.videos_icon = QIcon()
 
         self.tutorial_view = None
-        self.videos_view = None
+        self.video_view = None
         self.show_gestures_button.clicked.connect(lambda: self.set_tutorial_view())
         self.show_videos_button.clicked.connect(lambda: self.set_videos_view())
 
         self.setup_view()
 
     def set_tutorial_view(self):
-        self.tutorial_view = TutorialView(os.listdir('data/gestures'))
+        self.tutorial_view = GestureView(self.icon, os.listdir('data/gestures'))
 
     def set_videos_view(self):
-        self.videos_view = VideoView(path_to_video='C:/Users/robi997/Desktop/Vortex_Tutorials/Vortex1_0304/Vortex1_03.avi')
+        self.video = VideoView(self.icon, 'data/videos/romanian_app_text.avi')
 
     def setup_view(self):
         self.horizontal_group_box.setGeometry(QtCore.QRect(200, 600, 600, 150))
-        # self.horizontal_group_box.setSizePolicy(self.size_policy)
         self.horizontal_group_box.setSizeIncrement(QtCore.QSize(40, 1))
         self.horizontal_group_box.setFlat(False)
         self.horizontal_group_box.setStyleSheet("border: none;")
@@ -74,14 +78,13 @@ class HomeView(QWidget):
         self.a_rest.setStyleSheet(REST_LETTERS_LABEL_STYLE_SHEET)
 
         self.h_picture.setGeometry(QtCore.QRect(161, 280, 432, 230))
-        self.h_picture.setPixmap(QPixmap("D:/Hand Gesture Datasets/Training/Only_Letters/Only_Letters/H/H.png"))
+        self.h_picture.setPixmap(QPixmap('data/icons/h_letter.png'))
 
         self.r_picture.setGeometry(QtCore.QRect(754, 10, 242, 500))
-        self.r_picture.setPixmap(QPixmap(
-            "D:/Hand Gesture Datasets/Training/Only_Letters/Only_Letters/R/hand1_r_bot_seg_2_cropped.png"))
+        self.r_picture.setPixmap(QPixmap('data/icons/r_letter.png'))
 
         self.a_picture.setGeometry(QtCore.QRect(1160, 130, 282, 370))
-        self.a_picture.setPixmap(QPixmap("D:/Hand Gesture Datasets/Training/Only_Letters/Only_Letters/A/A.png"))
+        self.a_picture.setPixmap(QPixmap('data/icons/a_letter.png'))
 
         self.help_icon.addPixmap(QPixmap("data/icons/help_icon"), QIcon.Normal, QIcon.Off)
         self.show_gestures_button.setIcon(self.help_icon)
@@ -96,36 +99,39 @@ class HomeView(QWidget):
         self.horizontal_layout.addWidget(self.show_videos_button)
 
 
-class TutorialView(QScrollArea):
+class GestureView(QScrollArea):
+    """
+    Scrollable View class which showes all gestures of the american sign language in a vertical layout form
+    """
 
-    def __init__(self, gesture_path_list, parent=None):
+    def __init__(self, icon, gesture_path_list, parent=None):
         QScrollArea.__init__(self, parent)
         widget = QWidget()
         layout = QVBoxLayout(widget)
-        layout.setAlignment(QtCore.Qt.AlignTop | QtCore.Qt.AlignCenter)
+        layout.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignTop)
         layout.setSpacing(75)
+
         for index in range(len(gesture_path_list)):
             label = QLabel()
             pixmap = QPixmap('data/gestures/' + gesture_path_list[index])
-            painter = QPainter(self)
-            painter.drawPixmap(self.rect(), pixmap)
-            pen = QPen(QtCore.Qt.darkYellow, 3)
-            painter.setPen(pen)
-            painter.drawLine(10, 10, self.rect().width() - 10, 50)
             label.setPixmap(pixmap)
             layout.addWidget(label)
 
-        new_label = QLabel("Gigike Gigike Gigike Gigike")
-        new_label.setWordWrap(True)
-        layout.addWidget(new_label)
         self.setWidget(widget)
+        self.setStyleSheet(BACKGROUND_COLOR)
         self.setWidgetResizable(True)
-        # self.setStyleSheet('background: black;')
+        self.setWindowTitle('Gestures')
+        self.setWindowIcon(QIcon(icon))
         self.resize(800, 600)
         self.show()
 
-class VideoView(QMainWindow):
-    def __init__(self, path_to_video, parent=None):
+
+# noinspection PyArgumentList
+class VideoView(QWidget):
+    """
+    View class which lets users watch a few videos demonstrating the hand gesture recognition use case.
+    """
+    def __init__(self, icon, path_to_video, parent=None):
         QWidget.__init__(self, parent)
 
         self.media_player = QMediaPlayer(None, QMediaPlayer.VideoSurface)
@@ -133,6 +139,7 @@ class VideoView(QMainWindow):
 
         self.play_button = QPushButton()
         self.position_slider = QSlider(QtCore.Qt.Horizontal)
+        self.combo_box = QComboBox()
 
         self.content_widget = QWidget(self)
         self.content_layout = QHBoxLayout()
@@ -143,26 +150,32 @@ class VideoView(QMainWindow):
 
         self.media_player.stateChanged.connect(self.media_state_changed)
         self.media_player.positionChanged.connect(self.position_changed)
+        self.media_player.durationChanged.connect(self.duration_changed)
 
-        self.setup_view(path_to_video)
+        self.setup_view(icon, path_to_video)
 
-    def setup_view(self, path_to_video):
+    def setup_view(self, icon, path_to_video):
         self.play_button.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
         self.position_slider.setRange(0, 0)
+        self.combo_box.addItems(['ABC', 'Romanian Tutorial', 'Text 1', 'Text 2', 'Text 3'])
 
-        self.setCentralWidget(self.content_widget)
         self.content_layout.setContentsMargins(0, 0, 0, 0)
         self.content_layout.addWidget(self.play_button)
         self.content_layout.addWidget(self.position_slider)
+        self.content_layout.addWidget(self.combo_box)
 
         self.vertical_layout.addWidget(self.video_widget)
         self.vertical_layout.addLayout(self.content_layout)
-        self.content_widget.setLayout(self.vertical_layout)
+        self.setLayout(self.vertical_layout)
 
         self.media_player.setVideoOutput(self.video_widget)
         self.media_player.setMedia(QMediaContent(QUrl.fromLocalFile(path_to_video)))
+        self.media_player.play()
+        self.media_player.pause()
 
-        self.resize(640, 480)
+        self.resize(800, 600)
+        self.setWindowTitle('Videos')
+        self.setWindowIcon(QIcon(icon))
         self.show()
 
     def play_video(self):
@@ -184,8 +197,8 @@ class VideoView(QMainWindow):
                 self.style().standardIcon(QStyle.SP_MediaPlay)
             )
 
+    def duration_changed(self, duration):
+        self.position_slider.setRange(0, duration)
+
     def position_changed(self, position):
         self.position_slider.setValue(position)
-
-
-

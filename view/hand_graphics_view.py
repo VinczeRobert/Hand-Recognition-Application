@@ -5,6 +5,10 @@ from PyQt5.QtWidgets import QWidget, QGraphicsView, QGraphicsScene, QGraphicsPix
 
 # noinspection PyArgumentList
 class HandGraphicsView(QWidget):
+    """
+    This class is the superclass of AddNewSignView and HandGestureRecognitionView
+    It contains the frame for displaying the recording results which is a common part
+    """
 
     keyPressed = pyqtSignal(int)
 

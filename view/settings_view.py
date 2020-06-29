@@ -6,6 +6,9 @@ from view.style_sheets.main_view_stylesheet import LABEL_STYLE_SHEET, LINE_EDIT_
 
 # noinspection PyArgumentList
 class SettingsView(QtWidgets.QWidget):
+    """
+    View class used for displaying the available settings which can be changed
+    """
 
     def __init__(self, parent=None):
         super(SettingsView, self).__init__(parent)

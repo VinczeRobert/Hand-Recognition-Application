@@ -1,6 +1,5 @@
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QPushButton, QCheckBox
-
 from view.dialogs import choose_file_to_load, choose_file_to_save
 from view.hand_graphics_view import HandGraphicsView
 from view.style_sheets.main_view_stylesheet import BUTTON_STYLE_SHEET
@@ -8,6 +7,9 @@ from view.style_sheets.main_view_stylesheet import BUTTON_STYLE_SHEET
 
 # noinspection PyArgumentList
 class HandGestureRecognitionView(HandGraphicsView):
+    """
+    View class used for displaying the Hand Gesture Recognition submenu
+    """
 
     keyPressed = QtCore.pyqtSignal(int)
 

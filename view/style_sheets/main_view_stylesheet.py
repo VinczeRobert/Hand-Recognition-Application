@@ -1,3 +1,9 @@
+"""
+Stylesheets used in multiple places across the GUI
+"""
+
+BACKGROUND_COLOR = "background-color: #493fda;"
+
 BUTTON_STYLE_SHEET = '''
 QPushButton {
     border-radius: 15px;

@@ -7,38 +7,52 @@ from view.add_new_sign_view import AddNewSignView
 from view.home_view import HomeView
 from view.train_neural_network_view import TrainNeuralNetworkView
 from view.settings_view import SettingsView
-from view.style_sheets.main_view_stylesheet import BUTTON_STYLE_SHEET
+from view.style_sheets.main_view_stylesheet import BUTTON_STYLE_SHEET, BACKGROUND_COLOR
+
+
+WINDOW_ICON = "data/icons/hand_icon"
 
 
 # noinspection PyArgumentList
 class MainView(QMainWindow):
+    """
+    Main View class of the application which containt all other views.
+    """
     _instance = None
 
     closed = pyqtSignal()
 
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent)
+
+        # A stacked widget is being used to switch between HomeView, HandGestureRecognitionView, AddNewGestureView,
+        # TrainNeuralNetworkView and SettingsView
         self.central_widget = QStackedWidget()
         self.setCentralWidget(self.central_widget)
 
-        self.home_view = HomeView()
+        self.home_view = HomeView(WINDOW_ICON)
         self.settings_view = SettingsView()
         self.hand_gesture_recognition_view = HandGestureRecognitionView()
         self.add_new_sign_view = AddNewSignView()
         self.train_neural_network_view = TrainNeuralNetworkView()
 
+        # Add the mentioned views
         self.central_widget.addWidget(self.home_view)
         self.central_widget.addWidget(self.settings_view)
         self.central_widget.addWidget(self.hand_gesture_recognition_view)
         self.central_widget.addWidget(self.add_new_sign_view)
         self.central_widget.addWidget(self.train_neural_network_view)
 
+        # Home View is seen by default when the application opens
         self.central_widget.setCurrentWidget(self.home_view)
 
         self.horizontal_group_box = QGroupBox(self)
         self.horizontal_layout = QHBoxLayout(self.horizontal_group_box)
 
         self.size_policy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+
+        self.home_button = QPushButton("Home")
+        self.home_icon = QIcon()
 
         self.hand_gesture_recognition_button = QPushButton("Sign Recognition")
         self.hand_gesture_recognition_icon = QIcon()
@@ -52,10 +66,8 @@ class MainView(QMainWindow):
         self.settings_button = QPushButton("Settings")
         self.settings_icon = QIcon()
 
-        self.help_button = QPushButton("Help")
-        self.help_icon = QIcon()
-
         self.setup_view()
+        self.home_button.clicked.connect(lambda: self.change_view(self.home_view, "Home"))
         self.hand_gesture_recognition_button.clicked.connect(
             lambda: self.change_view(self.hand_gesture_recognition_view, "Sign Recognition"))
         self.new_gesture_button.clicked.connect(lambda: self.change_view(self.add_new_sign_view, "Add New Sign"))
@@ -70,7 +82,7 @@ class MainView(QMainWindow):
     def setup_view(self):
         self.resize(1600, 900)
         self.setWindowTitle("Hand Recognition Application")
-        self.setWindowIcon(QIcon("data/icons/hand_icon"))
+        self.setWindowIcon(QIcon(WINDOW_ICON))
 
         self.size_policy.setHorizontalStretch(50)
         self.size_policy.setVerticalStretch(0)
@@ -82,6 +94,12 @@ class MainView(QMainWindow):
         self.horizontal_group_box.setFlat(False)
         self.horizontal_group_box.setStyleSheet("border: none;")
         self.horizontal_layout.setSpacing(40)
+
+        self.home_icon.addPixmap(QPixmap("data/icons/home_icon.png"), QIcon.Normal, QIcon.Off)
+        self.home_button.setIcon(self.home_icon)
+        self.home_button.setIconSize(QtCore.QSize(50, 50))
+        self.home_button.setStyleSheet(BUTTON_STYLE_SHEET)
+        self.horizontal_layout.addWidget(self.home_button)
 
         self.hand_gesture_recognition_icon.addPixmap(QPixmap("data/icons/hand_icon"), QIcon.Normal, QIcon.Off)
         self.hand_gesture_recognition_button.setIcon(self.hand_gesture_recognition_icon)
@@ -107,13 +125,7 @@ class MainView(QMainWindow):
         self.settings_button.setStyleSheet(BUTTON_STYLE_SHEET)
         self.horizontal_layout.addWidget(self.settings_button)
 
-        self.help_icon.addPixmap(QPixmap("data/icons/help_icon.png"), QIcon.Normal, QIcon.Off)
-        self.help_button.setIcon(self.help_icon)
-        self.help_button.setIconSize(QtCore.QSize(50, 50))
-        self.help_button.setStyleSheet(BUTTON_STYLE_SHEET)
-        self.horizontal_layout.addWidget(self.help_button)
-
-        self.setStyleSheet("background-color: #493fda;")
+        self.setStyleSheet(BACKGROUND_COLOR)
 
     @staticmethod
     def get_instance():

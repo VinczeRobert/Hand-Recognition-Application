@@ -19,7 +19,7 @@ class HandGestureRecognitionController:
         self.image_preprocessor = ImagePreprocessor(self.settings.get_hand())
         self.currently_predicted_text = ''
 
-        self.predictor = Predictor('data/weights/augmented_weights2.ckpt', self.settings.get_classes())
+        self.predictor = Predictor('data/weights/weights_left_binary.ckpt', self.settings.get_classes())
 
         main_view = MainView.get_instance()
         self.hand_gesture_recognition_view = main_view.hand_gesture_recognition_view

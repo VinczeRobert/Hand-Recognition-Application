@@ -1,7 +1,6 @@
 import os
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QPushButton, QGroupBox, QFormLayout, QLabel, QLineEdit
-
 from view.dialogs import choose_folder
 from view.hand_graphics_view import HandGraphicsView
 from view.style_sheets.main_view_stylesheet import BUTTON_STYLE_SHEET, LINE_EDIT_STYLE_SHEET, LABEL_STYLE_SHEET
@@ -9,6 +8,9 @@ from view.style_sheets.main_view_stylesheet import BUTTON_STYLE_SHEET, LINE_EDIT
 
 # noinspection PyArgumentList
 class AddNewSignView(HandGraphicsView):
+    """
+    View class used for displaying the Add New Gesture submenu
+    """
 
     def __init__(self):
         super(AddNewSignView, self).__init__()

@@ -2,6 +2,8 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
 
 
+# Methods used for selecting opening folders, files, for saving files and for displaying error messages
+
 def choose_folder(message):
     dialog = QFileDialog()
     folder_path = dialog.getExistingDirectory(None, message)
