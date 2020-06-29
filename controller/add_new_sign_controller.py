@@ -10,6 +10,9 @@ from view.dialogs import show_error_message
 
 
 class AddNewSignController:
+    """
+    Controller class responsible for handling user input related to adding a new gesture
+    """
     def __init__(self):
         self.settings = Settings.get_instance()
         self.frame_captor = FrameCaptor.get_instance(self.settings.get_android_server_url())
@@ -22,7 +25,7 @@ class AddNewSignController:
         ))
 
         self._upload_path = None
-        self._start_saving = False
+        self._saving = False
 
         self.add_new_sign_view = main_view.add_new_sign_view
         self.add_new_sign_view.load_text_button.clicked.connect(lambda: self._set_download_folder())
@@ -37,15 +40,22 @@ class AddNewSignController:
     def _set_start(self):
         if self.image_preprocessor.get_background_subtractor() is not None:
 
+            # Starting the saving of frames of a new gesture is only possible if the entered data is correct
             if (validate_add_new_sign(self._upload_path, self.add_new_sign_view.class_name_line_edit.text(),
                                       self.add_new_sign_view.start_index_line_edit.text(),
                                       self.add_new_sign_view.end_index_line_edit.text(),
                                       self.settings.get_image_type())):
-                self._start_saving = True
+                self._saving = True
         else:
+            # Background has to be saved before starting
             show_error_message('Please save the background before starting!')
 
     def start_video(self, widget_class):
+        """
+        This method starts recording if the current widget is AddNewSignView, otherwise it stops
+        recording and the whole saving process
+        :param widget_class: Current UI View chosen from the main menu
+        """
         self.add_new_sign_view.graphics_view.setFocus()
 
         if isinstance(self.add_new_sign_view, widget_class):
@@ -61,15 +71,22 @@ class AddNewSignController:
             cv.destroyAllWindows()
             self.image_preprocessor.reset_background_subtractor()
             self.frame_captor.pause_and_restart_camera(False)
+            self._saving = False
 
     def preview_for_param_preparing(self, image_type, intermediary_steps):
+        """
+        "This method takes image_type and intermediary_steps from Settings
+         and starts recording but it doesn't save images yet.
+        """
         while self.frame_captor.is_running():
             image = self.frame_captor.read_frame()
 
             if self.image_preprocessor.get_background_subtractor():
+                # Image processing here is only done to save the background
+                # and show intermediary steps, but the input is not used
                 _, _ = self.image_preprocessor.prepare_image_for_classification(image, image_type, intermediary_steps)
 
-            if self._start_saving:
+            if self._saving:
                 cv.destroyAllWindows()
                 break
             else:
@@ -78,9 +95,13 @@ class AddNewSignController:
 
             cv.waitKey(10)
 
-        class_name, start_count, end_count = self.add_new_sign_view.set_parameters_before_start()
-        self.create_data_for_class(self._upload_path, class_name, start_count, end_count, image_type,
-                                   intermediary_steps)
+        if self.frame_captor.is_running():
+            # This function is called after validation of fields was correct, background was set and
+            # start button was pressed.
+            self.create_data_for_class(self._upload_path, self.add_new_sign_view.class_name_line_edit.text(),
+                                       int(self.add_new_sign_view.start_index_line_edit.text()),
+                                       int(self.add_new_sign_view.end_index_line_edit.text()), image_type,
+                                       intermediary_steps)
 
     def create_data_for_class(self, path_to_folder, class_name, start_count, end_count, image_type, intermediary_steps):
 
@@ -90,17 +111,21 @@ class AddNewSignController:
             os.mkdir(image_path)
 
         while self.frame_captor.is_running():
+            # Get new frame
             image = self.frame_captor.read_frame()
 
+            # Send the current frame through the image processing algorithms
             preprocessed_image, status = self.image_preprocessor.prepare_image_for_classification(
                 image, image_type, intermediary_steps)
 
             save_path = os.path.join(image_path, class_name + '_{}.jpg'.format(start_count))
 
+            # Update current frame in the UI
             image = self.frame_displayer.display_frame_in_building_mode(image, start_count)
             self.add_new_sign_view.update_frame(image)
 
             if status != -1:
+                # Images are only saved if status is not -1 (see ImagePreprocessor)
                 cv.imwrite(save_path, preprocessed_image)
                 start_count = start_count + 1
 
@@ -111,7 +136,9 @@ class AddNewSignController:
 
     # TODO: Add key listener to interrupt image saving
     def button_events(self, key):
-        if key == 66:
+        if key == 66:   # Button B
             self.image_preprocessor.set_background_subtractor()
-        elif key == 81:
-            print('We should quit...')
+        elif key == 81: # Button Q
+            # Q doesn't quit the saving of images, but it pauses it
+            if self._saving:
+                self._saving = False

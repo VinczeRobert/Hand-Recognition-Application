@@ -7,6 +7,12 @@ from model.settings import Settings, HAND, IMAGE_TYPE
 
 
 def real_time_test_for_one_class(class_name, hand_index, image_type):
+    """
+    This method is meant to be used to test the percentage of correct predictions for a single class in real time.
+    :param class_name: class to be used for testing
+    :param hand_index: hand to be used for testing
+    :param image_type: image_type to be used for testing
+    """
     settings = Settings.get_instance()
     frame_captor = FrameCaptor.get_instance(settings.get_android_server_url())
     frame_captor.set_capture_mode()

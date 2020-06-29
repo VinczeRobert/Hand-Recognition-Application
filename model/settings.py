@@ -5,6 +5,12 @@ IMAGE_TYPE = ['RGB', 'BINARY']
 
 
 class Settings:
+    """
+    Class used to store the settings of the application.
+    This class is deserialized (if the settings file can be found) when the application starts and it
+    is serialized before it is closed.
+    This class has been built using the Singleton Design Pattern.
+    """
     _instance = None
 
     def __init__(self):
@@ -32,6 +38,9 @@ class Settings:
 
     def get_classes(self):
         return self._classes
+
+    def set_classes(self, classes):
+        self._classes = classes
 
     def switch_image_type(self):
         if self._image_type == IMAGE_TYPE[0]:
@@ -65,13 +74,13 @@ class Settings:
         return self._intermediary_steps
 
     def serialize(self):
-        with open('settings', 'wb') as f:
+        with open('data/settings/settings', 'wb') as f:
             pickle.dump(self, f)
 
     @staticmethod
     def _deserialize():
         try:
-            with open('settings', 'rb') as f:
+            with open('data/settings/settings', 'rb') as f:
                 Settings._instance = pickle.load(f)
             return 0
         except FileNotFoundError:

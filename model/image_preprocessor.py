@@ -4,11 +4,19 @@ from model.settings import HAND, IMAGE_TYPE
 
 
 class ImagePreprocessor:
+    """
+    Class responsible for the image processing algorithms before
+    sending the new frames to the CNN
+    """
     def __init__(self, hand_index=0):
         self._background_subtractor = None
         self._hand_index = hand_index
 
     def prepare_image_for_classification(self, image, image_type, intermediary_steps):
+        """
+        Method which goes through the image processing algorithms
+        """
+
         # STEP 1: Remove noise
         filtered_image = cv.bilateralFilter(image, 9, 75, 75)
         self.show_intermediary_step(filtered_image, intermediary_steps, 'Filtered Image')
@@ -45,7 +53,7 @@ class ImagePreprocessor:
             largest_contour = sorted(contours, key=cv.contourArea)[-1]
             contour_area = cv.contourArea(largest_contour)
 
-            # If largest area does not cover at least 30% of the image, it is considered that no handsign was shown
+            # If largest area does not cover at least 15% of the image, it is considered that no handsign was shown
             if contour_area < (0.15 * opened_hand.shape[0] * opened_hand.shape[1]):
                 three_channels_opened_hand = cv.cvtColor(opened_hand, cv.COLOR_GRAY2RGB)
                 self.show_intermediary_step(three_channels_opened_hand, intermediary_steps, 'Final Image')
@@ -66,6 +74,9 @@ class ImagePreprocessor:
             return extracted_hand, 0
 
     def set_background_subtractor(self):
+        """
+        Method called when the user saves the background.
+        """
         self._background_subtractor = cv.createBackgroundSubtractorMOG2(0, 50, detectShadows=False)
 
     def reset_background_subtractor(self):
@@ -79,6 +90,9 @@ class ImagePreprocessor:
 
     @staticmethod
     def show_intermediary_step(image, intermediary_steps, step):
+        """
+        Shows an intermediary step of the image processing process.
+        """
         if intermediary_steps[step]:
             cv.imshow(step, image)
 

@@ -1,18 +1,21 @@
 import requests
+from requests.exceptions import ConnectionError, Timeout, MissingSchema
 import cv2 as cv
 import numpy as np
-from requests.exceptions import ConnectionError, Timeout, MissingSchema
 
 
 class FrameCaptor:
+    """
+    This class is used to continuosly capture frames from the camera in real time and to prepare and to edit them
+    with display messages and the rectangle representing the area of interest, where users are required to put their
+    hand signs. This class has been built using the Singleton Design Pattern.
+    """
     _instance = None
 
     def __init__(self, android_server_url):
         """
-        This class is used to continuosly capture frames from the camera in real time and to prepare and to edit them
-        with display messages and the rectangle representing the area of interest, where users are required to put their hand signs
-        :param url: url to Android IPWebcam server; if it is a valid one, the application will use the Android phone's camera
-        :param hand: 0 for right hand, 1 for left hand
+        :param android_server_url: url to Android IPWebcam server; if it is a valid one,
+        the application will use the Android phone's camera
         """
         self._android_server_url = android_server_url + '/shot.jpg'
         self._is_android_server = False
@@ -44,10 +47,7 @@ class FrameCaptor:
 
     def read_frame(self):
         """
-        Reads frame from camera input, applies bilateral filter on it and display responses to the user
-        :param is_background_captured: boolean parameter to check if the background has been extracted
-        :param predicted_letter: the response of the CNNArchitecture for the currently shown hand sign
-        :return: frame with messages
+        Reads and flips frames.
         """
         if self._is_android_server is False:
             _, frame = self._camera.read()

@@ -1,10 +1,12 @@
 from model.frame_captor import FrameCaptor
 from model.settings import Settings
 from view.main_view import MainView
-import tensorflow as tf
 
 
 class MainController:
+    """
+    Main Controller of the application
+    """
     def __init__(self):
         self.settings = Settings.get_instance()
 
@@ -13,6 +15,9 @@ class MainController:
         main_view.show()
 
     def prepare_for_closing(self):
+        """
+        Close camera and serialize settings before closing the application.
+        """
         FrameCaptor.get_instance().pause_and_restart_camera(False)
         FrameCaptor.get_instance().close_camera()
         self.settings.serialize()

@@ -3,6 +3,9 @@ from view.main_view import MainView
 
 
 class SettingsController:
+    """
+    Controller class which handles user changes in settings
+    """
     def __init__(self):
         self.settings = Settings.get_instance()
         main_view = MainView.get_instance()
